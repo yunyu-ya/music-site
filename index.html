@@ -4,339 +4,253 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>宇夜的音樂作品集</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet" />
   <style>
     body {
-      margin: 0;
-      font-family: 'Orbitron', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-
-      background-color: #0a0a0a;
-      background-image:
-        linear-gradient(rgba(10,10,10,0.75), rgba(10,10,10,0.75)),
-        url('https://raw.githubusercontent.com/yunyu-ya/music-site/3cae4b304079928255ec3a2845001e25a5337061/%E5%89%AA%E5%BD%B1.png');
-      background-repeat: no-repeat;
-      background-position: center center;
-      background-size: cover;
-
+      font-family: 'Arial', sans-serif;
+      background: #121212;
       color: #f44336;
+      margin: 0;
+      padding: 1rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
-
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-image: url('https://cdn-icons-png.flaticon.com/512/2917/2917999.png');
-      background-repeat: repeat;
-      background-size: 100px 100px;
-      opacity: 0.05;
-      pointer-events: none;
-      z-index: 0;
-    }
-
     header {
-      padding: 2rem;
       text-align: center;
-      background: #0f0f12cc;
-      box-shadow: 0 0 10px #f4433666;
-      color: #f44336;
-      position: relative;
-      z-index: 1;
+      margin-bottom: 1rem;
     }
-
-    header h1 {
-      margin: 0;
-      font-weight: 700;
-      font-size: 3rem;
-      text-shadow:
-        0 0 6px #f44336cc,
-        0 0 12px #ff7961cc;
-    }
-
-    .subtitle {
-      margin-top: 0.5rem;
-      font-style: italic;
-      color: #d6735c;
-    }
-
-    main {
-      flex: 1;
-      padding: 2rem 1rem 4rem;
-      max-width: 900px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
-    }
-
     .track {
-      background: #1b1b1bcc;
-      border-radius: 12px;
-      padding: 1.8rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 0 12px #f4433666;
-      transition: background 0.3s ease;
+      background: #222;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
     }
-
-    .track:hover {
-      background: #2a0a0acc;
-    }
-
     .track h2 {
-      margin: 0 0 0.6rem;
-      color: #f44336;
-      font-weight: 600;
-      text-shadow: 0 0 3px #f4433666;
+      margin: 0 0 0.5rem 0;
     }
-
-    .track p {
-      margin: 0.5rem 0 1rem;
-      font-size: 1rem;
-      color: #f1a89ccc;
-      line-height: 1.4;
-    }
-
     .controls {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      margin-top: 0.8rem;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
     }
-
-    .play-btn {
+    button.play-btn {
       background: #f44336;
       border: none;
-      padding: 0.6rem 1.4rem;
-      font-size: 1.1rem;
-      border-radius: 30px;
-      color: #1b1b1b;
-      cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
-      user-select: none;
-      box-shadow: 0 0 8px #f44336aa;
-      min-width: 80px;
-    }
-
-    .play-btn:hover {
-      background: #ff7961;
-      transform: scale(1.1);
-    }
-
-    .play-btn:focus {
-      outline: none;
-      box-shadow: 0 0 12px 3px #f44336dd;
-    }
-
-    .play-btn.playing {
-      background: #a03628;
       color: #fff;
-      transform: scale(1.15);
-      box-shadow: 0 0 14px #a03628cc;
-    }
-
-    input[type=range] {
-      -webkit-appearance: none;
-      width: 150px;
-      height: 6px;
-      border-radius: 3px;
-      background: #ff7961;
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
       cursor: pointer;
-    }
-    input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: #a03628;
-      cursor: pointer;
-      border: 1px solid #6b1500;
-      margin-top: -5px;
-    }
-    input[type=range]:focus {
-      outline: none;
-      box-shadow: 0 0 8px 2px #f44336cc;
-    }
-
-    .time-display {
-      color: #f1a89c;
-      font-size: 0.9rem;
-      width: 70px;
-      text-align: center;
       user-select: none;
+      min-width: 70px;
+      font-weight: bold;
     }
-
+    button.play-btn.playing {
+      background: #c62828;
+    }
+    input[type=range] {
+      flex-grow: 1;
+      cursor: pointer;
+    }
+    .time-display {
+      width: 80px;
+      text-align: center;
+      font-size: 0.9rem;
+      user-select: none;
+      color: #ddd;
+    }
+    #album-art {
+      width: 100%;
+      max-height: 300px;
+      object-fit: contain;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      box-shadow: 0 0 15px #f4433633;
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1>宇夜</h1>
-    <p class="subtitle">一起聽聽不一樣的味道</p>
+    <h1>宇夜的音樂作品集</h1>
   </header>
 
-  <main>
-    <section class="track" data-audio="shenjing.mp3">
+  <img id="album-art" src="https://raw.githubusercontent.com/yunyu-ya/music-site/音樂/剪影.png" alt="專輯封面" />
+
+  <div id="tracks-container">
+    <section class="track" data-audio="https://raw.githubusercontent.com/yunyu-ya/music-site/音樂/《深井》.mp3">
       <h2>《深井》</h2>
-      <div class="controls">
-        <button class="play-btn" aria-label="播放 《深井》">▶️ Play</button>
-        <input type="range" class="progress" min="0" max="100" value="0" step="1" aria-label="播放進度" />
-        <span class="time-display">00:00 / 00:00</span>
-        <input type="range" class="volume" min="0" max="1" step="0.01" value="0.7" aria-label="音量調整" />
-      </div>
+      <button class="play-btn" aria-label="播放 《深井》">▶️ Play</button>
       <p>融入日系風味的旋律，帶有濃厚的情感。</p>
     </section>
 
-    <section class="track" data-audio="listen-no-more-duet.mp3">
+    <section class="track" data-audio="https://raw.githubusercontent.com/yunyu-ya/music-site/音樂/《聽不見你了》-男女合唱.mp3">
       <h2>《聽不見你了》-男女合唱</h2>
-      <div class="controls">
-        <button class="play-btn" aria-label="播放 《聽不見你了》-男女合唱">▶️ Play</button>
-        <input type="range" class="progress" min="0" max="100" value="0" step="1" aria-label="播放進度" />
-        <span class="time-display">00:00 / 00:00</span>
-        <input type="range" class="volume" min="0" max="1" step="0.01" value="0.7" aria-label="音量調整" />
-      </div>
+      <button class="play-btn" aria-label="播放 《聽不見你了》-男女合唱">▶️ Play</button>
       <p>一首感性的作品，男女深情對唱。</p>
     </section>
 
-    <section class="track" data-audio="last-page.mp3">
+    <section class="track" data-audio="https://raw.githubusercontent.com/yunyu-ya/music-site/音樂/《最後一頁》.mp3">
       <h2>《最後一頁》</h2>
-      <div class="controls">
-        <button class="play-btn" aria-label="播放 《最後一頁》">▶️ Play</button>
-        <input type="range" class="progress" min="0" max="100" value="0" step="1" aria-label="播放進度" />
-        <span class="time-display">00:00 / 00:00</span>
-        <input type="range" class="volume" min="0" max="1" step="0.01" value="0.7" aria-label="音量調整" />
-      </div>
+      <button class="play-btn" aria-label="播放 《最後一頁》">▶️ Play</button>
       <p>帶有故事感的旋律，帶你翻開最後一頁。</p>
     </section>
 
-    <section class="track" data-audio="forgot-me.mp3">
+    <section class="track" data-audio="https://raw.githubusercontent.com/yunyu-ya/music-site/音樂/《當你不記得我》.mp3">
       <h2>《當你不記得我》</h2>
-      <div class="controls">
-        <button class="play-btn" aria-label="播放 《當你不記得我》">▶️ Play</button>
-        <input type="range" class="progress" min="0" max="100" value="0" step="1" aria-label="播放進度" />
-        <span class="time-display">00:00 / 00:00</span>
-        <input type="range" class="volume" min="0" max="1" step="0.01" value="0.7" aria-label="音量調整" />
-      </div>
+      <button class="play-btn" aria-label="播放 《當你不記得我》">▶️ Play</button>
       <p>感傷的抒情曲，觸動心弦。</p>
     </section>
-  </main>
+  </div>
 
-  <audio id="audio-player"></audio>
+  <div class="controls">
+    <button id="prev-btn">⏪</button>
+    <button id="main-play-btn">▶️</button>
+    <button id="next-btn">⏩</button>
+    <span class="time-display" id="current-time">0:00</span>
+    <input type="range" id="progress-bar" min="0" max="100" value="0" />
+    <span class="time-display" id="duration">0:00</span>
+  </div>
+
+  <input type="range" id="volume-bar" min="0" max="100" value="100" style="width: 100%; margin-top: 0.5rem;" />
+
+  <audio id="audio-player" preload="auto"></audio>
 
   <script>
     const audioPlayer = document.getElementById('audio-player');
-    const tracks = document.querySelectorAll('.track');
+    const playButtons = document.querySelectorAll('.play-btn');
+    const mainPlayBtn = document.getElementById('main-play-btn');
+    const progressBar = document.getElementById('progress-bar');
+    const volumeBar = document.getElementById('volume-bar');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const albumArt = document.getElementById('album-art');
+    const currentTimeEl = document.getElementById('current-time');
+    const durationEl = document.getElementById('duration');
 
-    let currentTrack = null;
-    let currentBtn = null;
-    let progressSlider = null;
-    let volumeSlider = null;
-    let timeDisplay = null;
+    let currentTrackIndex = -1;
+    let tracks = [];
 
-    // 格式化秒數為 mm:ss
-    function formatTime(seconds) {
-      const m = Math.floor(seconds / 60).toString().padStart(2, '0');
-      const s = Math.floor(seconds % 60).toString().padStart(2, '0');
-      return `${m}:${s}`;
-    }
-
-    tracks.forEach(track => {
-      const btn = track.querySelector('.play-btn');
-      const progress = track.querySelector('.progress');
-      const volume = track.querySelector('.volume');
-      const time = track.querySelector('.time-display');
-      const audioSrc = track.getAttribute('data-audio');
-
-      // 初始化音量滑桿
-      volume.value = 0.7;
+    // 初始化 tracks 陣列
+    playButtons.forEach((btn, index) => {
+      const trackSection = btn.closest('.track');
+      tracks.push({
+        audio: trackSection.getAttribute('data-audio'),
+        title: trackSection.querySelector('h2').textContent
+      });
 
       btn.addEventListener('click', () => {
-        // 同一首正在播放 => 暫停
-        if (currentTrack === track && !audioPlayer.paused) {
-          audioPlayer.pause();
-          updateButton(btn, false);
-          return;
-        }
-
-        // 不同曲目
-        if (currentTrack !== track) {
-          if (currentBtn) updateButton(currentBtn, false);
-          currentTrack = track;
-          currentBtn = btn;
-          progressSlider = progress;
-          volumeSlider = volume;
-          timeDisplay = time;
-
-          audioPlayer.src = audioSrc;
-          audioPlayer.load();
-          audioPlayer.volume = volume.value;
-          audioPlayer.play().catch(() => {
-            alert('無法載入音樂檔案！');
-            updateButton(btn, false);
-          });
-          updateButton(btn, true);
-
-          // 重置進度條與時間顯示
-          progress.value = 0;
-          time.textContent = `00:00 / 00:00`;
+        if(currentTrackIndex === index){
+          if(audioPlayer.paused){
+            audioPlayer.play();
+            updatePlayBtn(btn, true);
+            mainPlayBtn.textContent = '⏸';
+          } else {
+            audioPlayer.pause();
+            updatePlayBtn(btn, false);
+            mainPlayBtn.textContent = '▶️';
+          }
         } else {
-          // 同首暫停後再播放
-          audioPlayer.play().catch(() => {
-            alert('無法載入音樂檔案！');
-            updateButton(btn, false);
-          });
-          updateButton(btn, true);
-        }
-      });
-
-      // 調整音量
-      volume.addEventListener('input', () => {
-        if (track === currentTrack) {
-          audioPlayer.volume = volume.value;
-        }
-      });
-
-      // 拖曳進度條跳轉
-      progress.addEventListener('input', () => {
-        if (track === currentTrack && audioPlayer.duration) {
-          const seekTime = (progress.value / 100) * audioPlayer.duration;
-          audioPlayer.currentTime = seekTime;
+          loadTrack(index);
+          playTrack();
         }
       });
     });
 
-    // 音訊播放時間更新
-    audioPlayer.addEventListener('timeupdate', () => {
-      if (!currentTrack) return;
-      if (!audioPlayer.duration) return;
+    function loadTrack(index){
+      currentTrackIndex = index;
+      audioPlayer.src = tracks[index].audio;
+      updateAllPlayButtons();
+      mainPlayBtn.textContent = '⏸';
+      // 如果你有專輯封面，這邊可以換
+      // albumArt.src = 對應圖片路徑
+    }
 
-      const currentTime = audioPlayer.currentTime;
-      const duration = audioPlayer.duration;
+    function playTrack(){
+      audioPlayer.play().catch(() => {
+        alert('無法播放音樂檔案');
+      });
+      updateAllPlayButtons(true);
+      mainPlayBtn.textContent = '⏸';
+    }
 
-      // 更新時間顯示
-      timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
+    function pauseTrack(){
+      audioPlayer.pause();
+      updateAllPlayButtons(false);
+      mainPlayBtn.textContent = '▶️';
+    }
 
-      // 更新進度條
-      const percent = (currentTime / duration) * 100;
-      progressSlider.value = percent;
-    });
-
-    // 播放結束時按鈕狀態回復
-    audioPlayer.addEventListener('ended', () => {
-      if (currentBtn) {
-        updateButton(currentBtn, false);
+    mainPlayBtn.addEventListener('click', () => {
+      if(currentTrackIndex === -1 && tracks.length > 0){
+        loadTrack(0);
+        playTrack();
+      } else if(audioPlayer.paused){
+        playTrack();
+      } else {
+        pauseTrack();
       }
-      currentTrack = null;
-      currentBtn = null;
-      progressSlider = null;
-      volumeSlider = null;
-      timeDisplay = null;
     });
 
-    function updateButton(button, isPlaying) {
-      button.textContent = isPlaying ? '⏸ Pause' : '▶️ Play';
-      button.classList.toggle('playing', isPlaying);
+    prevBtn.addEventListener('click', () => {
+      if(tracks.length === 0) return;
+      currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+      loadTrack(currentTrackIndex);
+      playTrack();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if(tracks.length === 0) return;
+      currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+      loadTrack(currentTrackIndex);
+      playTrack();
+    });
+
+    audioPlayer.addEventListener('ended', () => {
+      nextBtn.click();
+    });
+
+    audioPlayer.addEventListener('timeupdate', () => {
+      if(audioPlayer.duration){
+        let progressPercent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+        progressBar.value = progressPercent;
+        currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+        durationEl.textContent = formatTime(audioPlayer.duration);
+      }
+    });
+
+    progressBar.addEventListener('input', () => {
+      if(audioPlayer.duration){
+        let seekTime = (progressBar.value / 100) * audioPlayer.duration;
+        audioPlayer.currentTime = seekTime;
+      }
+    });
+
+    volumeBar.addEventListener('input', () => {
+      audioPlayer.volume = volumeBar.value / 100;
+    });
+
+    function updatePlayBtn(button, isPlaying){
+      if(isPlaying){
+        button.textContent = '⏸ Pause';
+        button.classList.add('playing');
+      } else {
+        button.textContent = '▶️ Play';
+        button.classList.remove('playing');
+      }
+    }
+
+    function updateAllPlayButtons(isPlaying){
+      playButtons.forEach((btn, idx) => {
+        updatePlayBtn(btn, idx === currentTrackIndex && isPlaying);
+      });
+    }
+
+    function formatTime(seconds){
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
   </script>
 </body>
 </html>
+
 
