@@ -4,10 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>宇夜的音樂作品集</title>
-  <!-- 引入 Orbitron 字體 -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet" />
   <style>
-    /* 字體與背景設定 */
     body {
       margin: 0;
       font-family: 'Orbitron', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -15,11 +13,10 @@
       flex-direction: column;
       min-height: 100vh;
 
-      /* 機械戰士插圖背景 */
       background-color: #0a0a0a;
       background-image:
         linear-gradient(rgba(10,10,10,0.75), rgba(10,10,10,0.75)),
-        url('file:///C:/Users/j9302/OneDrive/%E5%9C%96%E7%89%87/%E5%89%AA%E5%BD%B1.png');
+        url('https://raw.githubusercontent.com/yunyu-ya/music-site/3cae4b304079928255ec3a2845001e25a5337061/%E5%89%AA%E5%BD%B1.png');
       background-repeat: no-repeat;
       background-position: center center;
       background-size: cover;
@@ -27,7 +24,6 @@
       color: #f44336;
     }
 
-    /* 齒輪圖案疊加，透明度低不搶眼 */
     body::before {
       content: "";
       position: fixed;
@@ -40,7 +36,6 @@
       z-index: 0;
     }
 
-    /* 頁首樣式 */
     header {
       padding: 2rem;
       text-align: center;
@@ -66,7 +61,6 @@
       color: #d6735c;
     }
 
-    /* 主內容區 */
     main {
       flex: 1;
       padding: 2rem 1rem 4rem;
@@ -76,7 +70,6 @@
       z-index: 1;
     }
 
-    /* 曲目區塊 */
     .track {
       background: #1b1b1bcc;
       border-radius: 12px;
@@ -104,7 +97,13 @@
       line-height: 1.4;
     }
 
-    /* 播放按鈕 */
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 0.8rem;
+    }
+
     .play-btn {
       background: #f44336;
       border: none;
@@ -116,6 +115,7 @@
       transition: background 0.3s, transform 0.2s;
       user-select: none;
       box-shadow: 0 0 8px #f44336aa;
+      min-width: 80px;
     }
 
     .play-btn:hover {
@@ -134,6 +134,38 @@
       transform: scale(1.15);
       box-shadow: 0 0 14px #a03628cc;
     }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 150px;
+      height: 6px;
+      border-radius: 3px;
+      background: #ff7961;
+      cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #a03628;
+      cursor: pointer;
+      border: 1px solid #6b1500;
+      margin-top: -5px;
+    }
+    input[type=range]:focus {
+      outline: none;
+      box-shadow: 0 0 8px 2px #f44336cc;
+    }
+
+    .time-display {
+      color: #f1a89c;
+      font-size: 0.9rem;
+      width: 70px;
+      text-align: center;
+      user-select: none;
+    }
+
   </style>
 </head>
 <body>
@@ -143,27 +175,47 @@
   </header>
 
   <main>
-    <section class="track" data-audio="《深井》.mp3">
+    <section class="track" data-audio="shenjing.mp3">
       <h2>《深井》</h2>
-      <button class="play-btn" aria-label="播放 《深井》">▶️ Play</button>
+      <div class="controls">
+        <button class="play-btn" aria-label="播放 《深井》">▶️ Play</button>
+        <input type="range" class="progress" min="0" max="100" value="0" step="1" aria-label="播放進度" />
+        <span class="time-display">00:00 / 00:00</span>
+        <input type="range" class="volume" min="0" max="1" step="0.01" value="0.7" aria-label="音量調整" />
+      </div>
       <p>融入日系風味的旋律，帶有濃厚的情感。</p>
     </section>
 
-    <section class="track" data-audio="《聽不見你了》-男女合唱.mp3">
-      <h2>《聽不見你了》-男女合唱 </h2>
-      <button class="play-btn" aria-label="播放 《聽不見你了》-男女合唱 ">▶️ Play</button>
+    <section class="track" data-audio="listen-no-more-duet.mp3">
+      <h2>《聽不見你了》-男女合唱</h2>
+      <div class="controls">
+        <button class="play-btn" aria-label="播放 《聽不見你了》-男女合唱">▶️ Play</button>
+        <input type="range" class="progress" min="0" max="100" value="0" step="1" aria-label="播放進度" />
+        <span class="time-display">00:00 / 00:00</span>
+        <input type="range" class="volume" min="0" max="1" step="0.01" value="0.7" aria-label="音量調整" />
+      </div>
       <p>一首感性的作品，男女深情對唱。</p>
     </section>
 
-    <section class="track" data-audio="《最後一頁》.mp3">
+    <section class="track" data-audio="last-page.mp3">
       <h2>《最後一頁》</h2>
-      <button class="play-btn" aria-label="播放 《最後一頁》">▶️ Play</button>
+      <div class="controls">
+        <button class="play-btn" aria-label="播放 《最後一頁》">▶️ Play</button>
+        <input type="range" class="progress" min="0" max="100" value="0" step="1" aria-label="播放進度" />
+        <span class="time-display">00:00 / 00:00</span>
+        <input type="range" class="volume" min="0" max="1" step="0.01" value="0.7" aria-label="音量調整" />
+      </div>
       <p>帶有故事感的旋律，帶你翻開最後一頁。</p>
     </section>
 
-    <section class="track" data-audio="《當你不記得我》.mp3">
+    <section class="track" data-audio="forgot-me.mp3">
       <h2>《當你不記得我》</h2>
-      <button class="play-btn" aria-label="播放 《當你不記得我》">▶️ Play</button>
+      <div class="controls">
+        <button class="play-btn" aria-label="播放 《當你不記得我》">▶️ Play</button>
+        <input type="range" class="progress" min="0" max="100" value="0" step="1" aria-label="播放進度" />
+        <span class="time-display">00:00 / 00:00</span>
+        <input type="range" class="volume" min="0" max="1" step="0.01" value="0.7" aria-label="音量調整" />
+      </div>
       <p>感傷的抒情曲，觸動心弦。</p>
     </section>
   </main>
@@ -172,51 +224,112 @@
 
   <script>
     const audioPlayer = document.getElementById('audio-player');
-    const playButtons = document.querySelectorAll('.play-btn');
-    let currentPlayingBtn = null;
+    const tracks = document.querySelectorAll('.track');
 
-    const getFileName = url => url.substring(url.lastIndexOf('/') + 1);
+    let currentTrack = null;
+    let currentBtn = null;
+    let progressSlider = null;
+    let volumeSlider = null;
+    let timeDisplay = null;
 
-    playButtons.forEach(btn => {
+    // 格式化秒數為 mm:ss
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+      const s = Math.floor(seconds % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    tracks.forEach(track => {
+      const btn = track.querySelector('.play-btn');
+      const progress = track.querySelector('.progress');
+      const volume = track.querySelector('.volume');
+      const time = track.querySelector('.time-display');
+      const audioSrc = track.getAttribute('data-audio');
+
+      // 初始化音量滑桿
+      volume.value = 0.7;
+
       btn.addEventListener('click', () => {
-        const track = btn.closest('.track');
-        const audioSrc = track.getAttribute('data-audio');
-        const currentSrc = getFileName(audioPlayer.src);
-
-        if (audioPlayer.src && currentSrc === audioSrc && !audioPlayer.paused) {
+        // 同一首正在播放 => 暫停
+        if (currentTrack === track && !audioPlayer.paused) {
           audioPlayer.pause();
           updateButton(btn, false);
-          currentPlayingBtn = null;
           return;
         }
 
-        audioPlayer.src = audioSrc;
-        audioPlayer.play().catch(() => {
-          alert('無法載入音樂檔案！');
-          updateButton(btn, false);
-        });
+        // 不同曲目
+        if (currentTrack !== track) {
+          if (currentBtn) updateButton(currentBtn, false);
+          currentTrack = track;
+          currentBtn = btn;
+          progressSlider = progress;
+          volumeSlider = volume;
+          timeDisplay = time;
 
-        if (currentPlayingBtn && currentPlayingBtn !== btn) {
-          updateButton(currentPlayingBtn, false);
+          audioPlayer.src = audioSrc;
+          audioPlayer.load();
+          audioPlayer.volume = volume.value;
+          audioPlayer.play().catch(() => {
+            alert('無法載入音樂檔案！');
+            updateButton(btn, false);
+          });
+          updateButton(btn, true);
+
+          // 重置進度條與時間顯示
+          progress.value = 0;
+          time.textContent = `00:00 / 00:00`;
+        } else {
+          // 同首暫停後再播放
+          audioPlayer.play().catch(() => {
+            alert('無法載入音樂檔案！');
+            updateButton(btn, false);
+          });
+          updateButton(btn, true);
         }
-
-        updateButton(btn, true);
-        currentPlayingBtn = btn;
       });
 
-      btn.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          btn.click();
+      // 調整音量
+      volume.addEventListener('input', () => {
+        if (track === currentTrack) {
+          audioPlayer.volume = volume.value;
+        }
+      });
+
+      // 拖曳進度條跳轉
+      progress.addEventListener('input', () => {
+        if (track === currentTrack && audioPlayer.duration) {
+          const seekTime = (progress.value / 100) * audioPlayer.duration;
+          audioPlayer.currentTime = seekTime;
         }
       });
     });
 
+    // 音訊播放時間更新
+    audioPlayer.addEventListener('timeupdate', () => {
+      if (!currentTrack) return;
+      if (!audioPlayer.duration) return;
+
+      const currentTime = audioPlayer.currentTime;
+      const duration = audioPlayer.duration;
+
+      // 更新時間顯示
+      timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
+
+      // 更新進度條
+      const percent = (currentTime / duration) * 100;
+      progressSlider.value = percent;
+    });
+
+    // 播放結束時按鈕狀態回復
     audioPlayer.addEventListener('ended', () => {
-      if (currentPlayingBtn) {
-        updateButton(currentPlayingBtn, false);
-        currentPlayingBtn = null;
+      if (currentBtn) {
+        updateButton(currentBtn, false);
       }
+      currentTrack = null;
+      currentBtn = null;
+      progressSlider = null;
+      volumeSlider = null;
+      timeDisplay = null;
     });
 
     function updateButton(button, isPlaying) {
@@ -226,3 +339,4 @@
   </script>
 </body>
 </html>
+
