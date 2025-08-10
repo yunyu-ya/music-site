@@ -389,3 +389,18 @@
   </script>
 </body>
 </html>
+function loadTrack(index){
+  currentTrackIndex = index;
+  audioPlayer.src = tracks[index].audio;
+  updateAllPlayButtons();
+  mainPlayBtn.textContent = '⏸';
+  mainPlayBtn.classList.add('playing');
+  mainPlayBtn.classList.remove('paused');
+  updateNowPlaying();
+
+  // 讓目前播放曲目的區塊滾動到視窗中間偏上（smooth 滾動）
+  const trackSections = document.querySelectorAll('.track');
+  if(trackSections[index]){
+    trackSections[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
