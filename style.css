@@ -72,14 +72,24 @@ main {
   border-radius: 25px;
   color: #121212;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.3s, transform 0.2s;
+  outline: none;
+  user-select: none;
 }
 
 .play-btn:hover {
   background: #f7b68c;
+  transform: scale(1.05);
+}
+
+.play-btn:focus {
+  box-shadow: 0 0 0 3px #f3a683cc;
 }
 
 .play-btn.playing {
   background: #a36c4e;
   color: #fff;
+  transform: scale(1.1);
+  box-shadow: 0 0 8px #a36c4ecc;
 }
+
