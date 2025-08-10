@@ -27,7 +27,7 @@
       border-radius: 8px;
     }
     header h1 {
-      color: #d1b3ff; /* 淡紫色帶光暈 */
+      color: #d1b3ff;
       text-shadow: 0 0 8px rgba(209, 179, 255, 0.8);
       margin: 0;
     }
@@ -265,6 +265,12 @@
       mainPlayBtn.classList.add('playing');
       mainPlayBtn.classList.remove('paused');
       updateNowPlaying();
+
+      // 滾動目前播放歌曲區塊到視窗中央
+      const trackSections = document.querySelectorAll('.track');
+      if(trackSections[index]){
+        trackSections[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     }
 
     function playTrack(){
@@ -384,23 +390,8 @@
       return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
 
-    // 預設初始播放模式
+    // 預設播放模式
     setPlayMode(0);
   </script>
 </body>
 </html>
-function loadTrack(index){
-  currentTrackIndex = index;
-  audioPlayer.src = tracks[index].audio;
-  updateAllPlayButtons();
-  mainPlayBtn.textContent = '⏸';
-  mainPlayBtn.classList.add('playing');
-  mainPlayBtn.classList.remove('paused');
-  updateNowPlaying();
-
-  // 讓目前播放曲目的區塊滾動到視窗中間偏上（smooth 滾動）
-  const trackSections = document.querySelectorAll('.track');
-  if(trackSections[index]){
-    trackSections[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-}
