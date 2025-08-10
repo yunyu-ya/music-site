@@ -39,14 +39,54 @@
       font-size: 1rem;
       font-style: italic;
     }
+    #now-playing-floating {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(106, 79, 191, 0.9);
+      color: #fff;
+      padding: 0.6rem 1.2rem;
+      border-radius: 25px;
+      box-shadow: 0 0 12px #6a4fbfcc;
+      font-weight: 600;
+      font-size: 1rem;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    #now-playing-floating.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
     .track {
       background: rgba(34, 34, 34, 0.7);
       border-radius: 8px;
       padding: 1rem;
       margin-bottom: 1rem;
     }
+    .track.collapsed > p {
+      display: none;
+    }
     .track h2 {
       margin: 0 0 0.5rem 0;
+      cursor: pointer;
+      user-select: none;
+      color: #d1b3ff;
+      text-shadow: 0 0 6px rgba(209, 179, 255, 0.7);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .collapse-icon {
+      font-size: 0.8rem;
+      user-select: none;
+      margin-left: 0.5rem;
+      transition: transform 0.3s ease;
+    }
+    .track.collapsed .collapse-icon {
+      transform: rotate(-90deg);
     }
     .controls {
       display: flex;
@@ -121,15 +161,54 @@
     }
 
     input[type=range] {
-      flex-grow: 1;
+      -webkit-appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: #444;
       cursor: pointer;
+      margin: 0 10px;
     }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #6a4fbf;
+      cursor: pointer;
+      box-shadow: 0 0 8px #6a4fbf;
+      transition: background 0.3s ease;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      background: #7e66d1;
+      box-shadow: 0 0 12px #7e66d1;
+    }
+    input[type=range]:focus {
+      outline: none;
+      background: #555;
+    }
+    input[type=range]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #6a4fbf;
+      cursor: pointer;
+      box-shadow: 0 0 8px #6a4fbf;
+      transition: background 0.3s ease;
+    }
+    input[type=range]::-moz-range-thumb:hover {
+      background: #7e66d1;
+      box-shadow: 0 0 12px #7e66d1;
+    }
+
     .time-display {
       width: 80px;
       text-align: center;
       font-size: 0.9rem;
       user-select: none;
       color: #ddd;
+      min-width: 50px;
     }
   </style>
 </head>
@@ -139,7 +218,7 @@
     <div id="now-playing" aria-live="polite">尚未播放任何歌曲</div>
   </header>
 
-  <div id="tracks-container">
+<div id="tracks-container">
     <section class="track" data-audio="https://raw.githubusercontent.com/yunyu-ya/music-site/音樂/《深井》.mp3">
       <h2>《深井》</h2>
       <button class="play-btn" aria-label="播放 《深井》">▶️ Play</button>
@@ -208,20 +287,22 @@
   </div>
 
   <div class="controls">
-    <button id="prev-btn">⏪</button>
-    <button id="main-play-btn" class="paused">▶️</button>
-    <button id="next-btn">⏩</button>
+    <button id="prev-btn" title="上一首">⏪</button>
+    <button id="main-play-btn" class="paused" title="播放/暫停">▶️</button>
+    <button id="next-btn" title="下一首">⏩</button>
 
     <button id="loop-all-btn" class="mode-btn active" title="循環全部">循環全部</button>
     <button id="loop-one-btn" class="mode-btn" title="單曲循環">單曲循環</button>
     <button id="shuffle-btn" class="mode-btn" title="隨機播放">隨機播放</button>
 
     <span class="time-display" id="current-time">0:00</span>
-    <input type="range" id="progress-bar" min="0" max="100" value="0" />
+    <input type="range" id="progress-bar" min="0" max="100" value="0" aria-label="播放進度" />
     <span class="time-display" id="duration">0:00</span>
   </div>
 
-  <input type="range" id="volume-bar" min="0" max="100" value="100" style="width: 100%; margin-top: 0.5rem;" />
+  <input type="range" id="volume-bar" min="0" max="100" value="100" style="width: 100%; margin-top: 0.5rem;" aria-label="音量控制" />
+
+  <div id="now-playing-floating" aria-live="polite" role="region">尚未播放任何歌曲</div>
 
   <audio id="audio-player" preload="auto"></audio>
 
@@ -242,12 +323,41 @@
     const currentTimeEl = document.getElementById('current-time');
     const durationEl = document.getElementById('duration');
     const nowPlayingEl = document.getElementById('now-playing');
+    const nowPlayingFloatingEl = document.getElementById('now-playing-floating');
 
     let currentTrackIndex = -1;
     let tracks = [];
 
     // 0=循環全部, 1=單曲循環, 2=隨機播放
     let playMode = 0;
+
+    // 記憶播放位置與曲目
+    const STORAGE_KEY = 'musicPlayerState';
+
+    function saveState(){
+      if(currentTrackIndex !== -1){
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          trackIndex: currentTrackIndex,
+          currentTime: audioPlayer.currentTime
+        }));
+      }
+    }
+
+    function loadState(){
+      const state = localStorage.getItem(STORAGE_KEY);
+      if(state){
+        try{
+          const obj = JSON.parse(state);
+          if(obj.trackIndex >=0 && obj.trackIndex < tracks.length){
+            currentTrackIndex = obj.trackIndex;
+            audioPlayer.src = tracks[currentTrackIndex].audio;
+            updateAllPlayButtons();
+            updateNowPlaying();
+            audioPlayer.currentTime = obj.currentTime || 0;
+          }
+        }catch(e){}
+      }
+    }
 
     // 初始化播放清單
     playButtons.forEach((btn, index) => {
@@ -279,11 +389,23 @@
       });
     });
 
+    // 折疊/展開說明文字
+    document.querySelectorAll('.track h2').forEach((h2, idx) => {
+      h2.addEventListener('click', () => {
+        const section = h2.parentElement;
+        section.classList.toggle('collapsed');
+      });
+    });
+
     function updateNowPlaying(){
       if(currentTrackIndex === -1){
         nowPlayingEl.textContent = '尚未播放任何歌曲';
+        nowPlayingFloatingEl.textContent = '尚未播放任何歌曲';
+        nowPlayingFloatingEl.classList.remove('visible');
       } else {
         nowPlayingEl.textContent = `正在播放：${tracks[currentTrackIndex].title}`;
+        nowPlayingFloatingEl.textContent = `正在播放：${tracks[currentTrackIndex].title}`;
+        nowPlayingFloatingEl.classList.add('visible');
       }
     }
 
@@ -384,6 +506,7 @@
         progressBar.value = progressPercent;
         currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
         durationEl.textContent = formatTime(audioPlayer.duration);
+        saveState();
       }
     });
 
@@ -420,8 +543,26 @@
       return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
 
-    // 預設播放模式
+    // 鍵盤快捷鍵：空白鍵播放暫停，左右鍵切歌
+    window.addEventListener('keydown', (e) => {
+      if(e.target.tagName === 'INPUT') return; // 忽略輸入框
+      if(e.code === 'Space'){
+        e.preventDefault();
+        if(audioPlayer.paused) playTrack();
+        else pauseTrack();
+      } else if(e.code === 'ArrowRight'){
+        nextBtn.click();
+      } else if(e.code === 'ArrowLeft'){
+        prevBtn.click();
+      }
+    });
+
+    // 初始化
     setPlayMode(0);
+    // 延後載入以確保 tracks 陣列已填充
+    window.addEventListener('load', () => {
+      loadState();
+    });
   </script>
 </body>
 </html>
