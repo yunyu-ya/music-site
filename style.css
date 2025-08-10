@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #121212;
+  color: #eee;
+  font-family: 'Noto Sans JP', sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  padding: 2rem;
+  text-align: center;
+  background: #1e1e1e;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+}
+
+h1 {
+  margin: 0;
+  font-weight: 700;
+  font-size: 2.5rem;
+  color: #f3a683;
+}
+
+.subtitle {
+  margin: 0.5rem 0 0;
+  color: #bbb;
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.track {
+  background: #222;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 0 8px #f3a683aa;
+  transition: background 0.3s;
+}
+
+.track:hover {
+  background: #2f2f2f;
+}
+
+.track h2 {
+  margin: 0 0 0.5rem;
+  color: #f3a683;
+}
+
+.track p {
+  margin: 0.5rem 0 1rem;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.play-btn {
+  background: #f3a683;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 25px;
+  color: #121212;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  outline: none;
+  user-select: none;
+}
+
+.play-btn:hover {
+  background: #f7b68c;
+  transform: scale(1.05);
+}
+
+.play-btn:focus {
+  box-shadow: 0 0 0 3px #f3a683cc;
+}
+
+.play-btn.playing {
+  background: #a36c4e;
+  color: #fff;
+  transform: scale(1.1);
+  box-shadow: 0 0 8px #a36c4ecc;
+}
