@@ -7,20 +7,25 @@
   <style>
     body {
       font-family: 'Arial', sans-serif;
-      background: #121212;
+      background: url("https://raw.githubusercontent.com/yunyu-ya/music-site/音樂/剪影.png") no-repeat center center fixed;
+      background-size: cover;
       color: #f44336;
       margin: 0;
       padding: 1rem;
       max-width: 600px;
       margin-left: auto;
       margin-right: auto;
+      backdrop-filter: blur(6px);
     }
     header {
       text-align: center;
       margin-bottom: 1rem;
+      background-color: rgba(0,0,0,0.5);
+      padding: 0.5rem;
+      border-radius: 8px;
     }
     .track {
-      background: #222;
+      background: rgba(34, 34, 34, 0.7);
       border-radius: 8px;
       padding: 1rem;
       margin-bottom: 1rem;
@@ -33,6 +38,9 @@
       align-items: center;
       gap: 0.5rem;
       margin-bottom: 0.5rem;
+      background: rgba(0,0,0,0.5);
+      padding: 0.5rem;
+      border-radius: 8px;
     }
     button.play-btn {
       background: #f44336;
@@ -59,22 +67,12 @@
       user-select: none;
       color: #ddd;
     }
-    #album-art {
-      width: 100%;
-      max-height: 300px;
-      object-fit: contain;
-      border-radius: 10px;
-      margin-bottom: 1rem;
-      box-shadow: 0 0 15px #f4433633;
-    }
   </style>
 </head>
 <body>
   <header>
     <h1>當天空突然下起雨 妳是否會記得我還在等妳</h1>
   </header>
-
-  <img id="album-art" src="https://raw.githubusercontent.com/yunyu-ya/music-site/音樂/剪影.png" alt="專輯封面" />
 
   <div id="tracks-container">
     <section class="track" data-audio="https://raw.githubusercontent.com/yunyu-ya/music-site/音樂/《深井》.mp3">
@@ -83,7 +81,7 @@
       <p>融入日系風味的旋律，帶有濃厚的情感。</p>
     </section>
 
-   <section class="track" data-audio="https://raw.githubusercontent.com/yunyu-ya/music-site/音樂/《雲下的聲音》.mp3">
+    <section class="track" data-audio="https://raw.githubusercontent.com/yunyu-ya/music-site/音樂/《雲下的聲音》.mp3">
       <h2>《雲下的聲音》</h2>
       <button class="play-btn" aria-label="播放 《雲下的聲音》">▶️ Play</button>
       <p>我還能聽見妳嗎??。</p>
@@ -107,8 +105,7 @@
       <p>帶有故事感的旋律，帶你翻開最後一頁。</p>
     </section>
 
-    <section class="track"data-audio="https://raw.githubusercontent.com/yunyu-ya/music-site/a643c1beb5754f9aafedb5164e7cff95760e8699/《當你不記得我》%20.mp3"
-">
+    <section class="track" data-audio="https://raw.githubusercontent.com/yunyu-ya/music-site/音樂/《當你不記得我》.mp3">
       <h2>《當你不記得我》</h2>
       <button class="play-btn" aria-label="播放 《當你不記得我》">▶️ Play</button>
       <p>感傷的抒情曲，觸動心弦。</p>
@@ -136,14 +133,12 @@
     const volumeBar = document.getElementById('volume-bar');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
-    const albumArt = document.getElementById('album-art');
     const currentTimeEl = document.getElementById('current-time');
     const durationEl = document.getElementById('duration');
 
     let currentTrackIndex = -1;
     let tracks = [];
 
-    // 初始化 tracks 陣列
     playButtons.forEach((btn, index) => {
       const trackSection = btn.closest('.track');
       tracks.push({
@@ -174,8 +169,6 @@
       audioPlayer.src = tracks[index].audio;
       updateAllPlayButtons();
       mainPlayBtn.textContent = '⏸';
-      // 如果你有專輯封面，這邊可以換
-      // albumArt.src = 對應圖片路徑
     }
 
     function playTrack(){
