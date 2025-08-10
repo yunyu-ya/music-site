@@ -4,7 +4,137 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>宇夜的音樂作品集</title>
-  <link rel="stylesheet" href="style.css" />
+  <!-- 引入 Orbitron 字體 -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet" />
+  <style>
+    /* 字體與背景設定 */
+    body {
+      margin: 0;
+      font-family: 'Orbitron', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+
+      /* 機械戰士插圖背景 */
+      background-color: #0a0a0a;
+      background-image:
+        linear-gradient(rgba(10,10,10,0.75), rgba(10,10,10,0.75)),
+        url('https://chatgpt.com/s/m_6898a1c4c7308191af8a3bc457f6d6ca');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+
+      color: #f44336;
+    }
+
+    /* 齒輪圖案疊加，透明度低不搶眼 */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: url('https://cdn-icons-png.flaticon.com/512/2917/2917999.png');
+      background-repeat: repeat;
+      background-size: 100px 100px;
+      opacity: 0.05;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* 頁首樣式 */
+    header {
+      padding: 2rem;
+      text-align: center;
+      background: #0f0f12cc;
+      box-shadow: 0 0 10px #f4433666;
+      color: #f44336;
+      position: relative;
+      z-index: 1;
+    }
+
+    header h1 {
+      margin: 0;
+      font-weight: 700;
+      font-size: 3rem;
+      text-shadow:
+        0 0 6px #f44336cc,
+        0 0 12px #ff7961cc;
+    }
+
+    .subtitle {
+      margin-top: 0.5rem;
+      font-style: italic;
+      color: #d6735c;
+    }
+
+    /* 主內容區 */
+    main {
+      flex: 1;
+      padding: 2rem 1rem 4rem;
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* 曲目區塊 */
+    .track {
+      background: #1b1b1bcc;
+      border-radius: 12px;
+      padding: 1.8rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 0 12px #f4433666;
+      transition: background 0.3s ease;
+    }
+
+    .track:hover {
+      background: #2a0a0acc;
+    }
+
+    .track h2 {
+      margin: 0 0 0.6rem;
+      color: #f44336;
+      font-weight: 600;
+      text-shadow: 0 0 3px #f4433666;
+    }
+
+    .track p {
+      margin: 0.5rem 0 1rem;
+      font-size: 1rem;
+      color: #f1a89ccc;
+      line-height: 1.4;
+    }
+
+    /* 播放按鈕 */
+    .play-btn {
+      background: #f44336;
+      border: none;
+      padding: 0.6rem 1.4rem;
+      font-size: 1.1rem;
+      border-radius: 30px;
+      color: #1b1b1b;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      user-select: none;
+      box-shadow: 0 0 8px #f44336aa;
+    }
+
+    .play-btn:hover {
+      background: #ff7961;
+      transform: scale(1.1);
+    }
+
+    .play-btn:focus {
+      outline: none;
+      box-shadow: 0 0 12px 3px #f44336dd;
+    }
+
+    .play-btn.playing {
+      background: #a03628;
+      color: #fff;
+      transform: scale(1.15);
+      box-shadow: 0 0 14px #a03628cc;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -40,6 +170,59 @@
 
   <audio id="audio-player"></audio>
 
-  <script src="script.js"></script>
+  <script>
+    const audioPlayer = document.getElementById('audio-player');
+    const playButtons = document.querySelectorAll('.play-btn');
+    let currentPlayingBtn = null;
+
+    const getFileName = url => url.substring(url.lastIndexOf('/') + 1);
+
+    playButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const track = btn.closest('.track');
+        const audioSrc = track.getAttribute('data-audio');
+        const currentSrc = getFileName(audioPlayer.src);
+
+        if (audioPlayer.src && currentSrc === audioSrc && !audioPlayer.paused) {
+          audioPlayer.pause();
+          updateButton(btn, false);
+          currentPlayingBtn = null;
+          return;
+        }
+
+        audioPlayer.src = audioSrc;
+        audioPlayer.play().catch(() => {
+          alert('無法載入音樂檔案！');
+          updateButton(btn, false);
+        });
+
+        if (currentPlayingBtn && currentPlayingBtn !== btn) {
+          updateButton(currentPlayingBtn, false);
+        }
+
+        updateButton(btn, true);
+        currentPlayingBtn = btn;
+      });
+
+      btn.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          btn.click();
+        }
+      });
+    });
+
+    audioPlayer.addEventListener('ended', () => {
+      if (currentPlayingBtn) {
+        updateButton(currentPlayingBtn, false);
+        currentPlayingBtn = null;
+      }
+    });
+
+    function updateButton(button, isPlaying) {
+      button.textContent = isPlaying ? '⏸ Pause' : '▶️ Play';
+      button.classList.toggle('playing', isPlaying);
+    }
+  </script>
 </body>
 </html>
