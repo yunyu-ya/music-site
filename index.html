@@ -3,35 +3,49 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>宇夜的音樂作品集</title>
+  <title>天空突然下起雨</title>
   <style>
     body {
+      font-family: 'Arial', sans-serif;
+      background: url("https://raw.githubusercontent.com/yunyu-ya/music-site/音樂/pexels-alex-andrews-271121-816608.jpg") no-repeat center center fixed;
+      background-size: cover;
+      color: #f44336;
       margin: 0;
-      font-family: Arial, sans-serif;
-      color: white;
-      background: url('https://github.com/yunyu-ya/music-site/blob/f98cfd4f8515fd944b846bb7c7749272acdd8a8a/NSHM_PHOTO_2025_3_2_21_33_10.jpg') no-repeat center center/cover;
+      padding: 1rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      backdrop-filter: blur(6px);
     }
     header {
       text-align: center;
-      padding: 1rem;
-    }
-    .subtitle {
-      font-size: 1.2rem;
-      color: #ccc;
-    }
-    main {
-      padding: 1rem;
-      max-width: 800px;
-      margin: auto;
+      margin-bottom: 1rem;
+      background-color: rgba(0,0,0,0.5);
+      padding: 0.5rem;
+      border-radius: 8px;
     }
     .track {
-      background: rgba(0,0,0,0.6);
+      background: rgba(34, 34, 34, 0.7);
+      border-radius: 8px;
       padding: 1rem;
       margin-bottom: 1rem;
-      border-radius: 10px;
     }
+    .track h2 {
+      margin: 0 0 0.5rem 0;
+    }
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      background: rgba(0,0,0,0.5);
+      padding: 0.5rem;
+      border-radius: 8px;
+    }
+
+    /* 漸變色按鈕樣式 */
     button.play-btn {
-      background: linear-gradient(45deg, #ff512f, #dd2476);
+      background: #f44336;
       border: none;
       color: #fff;
       padding: 0.5rem 1rem;
@@ -40,180 +54,258 @@
       user-select: none;
       min-width: 70px;
       font-weight: bold;
-      transition: background 0.3s ease, transform 0.2s ease;
+      transition: background-position 3s ease infinite;
     }
-    button.play-btn:hover {
-      filter: brightness(1.15);
-      transform: scale(1.05);
-    }
+    /* 播放中漸變動畫 */
     button.play-btn.playing {
-      background: linear-gradient(45deg, #c31432, #240b36);
+      background: linear-gradient(270deg, #f44336, #ff7961, #c62828, #f44336);
+      background-size: 800% 800%;
+      animation: gradientAnimation 8s ease infinite;
     }
-    .controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-    #main-play-btn,
-    #prev-btn,
-    #next-btn {
-      background: linear-gradient(45deg, #36d1dc, #5b86e5);
+
+    /* 主控按鈕漸變 */
+    #main-play-btn {
+      background: #f44336;
       border: none;
-      color: white;
+      color: #fff;
       padding: 0.5rem 1rem;
-      border-radius: 50%;
+      border-radius: 25px;
       cursor: pointer;
-      font-size: 1.2rem;
-      transition: background 0.3s ease, transform 0.2s ease;
+      user-select: none;
+      font-weight: bold;
+      transition: background-position 3s ease infinite;
     }
-    #main-play-btn:hover,
-    #prev-btn:hover,
-    #next-btn:hover {
-      filter: brightness(1.15);
-      transform: scale(1.1);
+    #main-play-btn.playing {
+      background: linear-gradient(270deg, #f44336, #ff7961, #c62828, #f44336);
+      background-size: 800% 800%;
+      animation: gradientAnimation 8s ease infinite;
     }
-    #progress-container {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: 1rem;
+    #main-play-btn.paused {
+      background: #f44336;
+      animation: none;
     }
-    #progress {
-      flex: 1;
+
+    @keyframes gradientAnimation {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
     }
-    #volume {
-      width: 100px;
+
+    input[type=range] {
+      flex-grow: 1;
+      cursor: pointer;
+    }
+    .time-display {
+      width: 80px;
+      text-align: center;
+      font-size: 0.9rem;
+      user-select: none;
+      color: #ddd;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>宇夜</h1>
-    <p class="subtitle">一起聽聽不一樣的味道</p>
+    <h1>當天空突然下起雨 妳是否會記得我還在等妳</h1>
   </header>
 
-  <main>
-    <section class="track" data-audio="《深井》.mp3">
+  <div id="tracks-container">
+    <section class="track" data-audio="https://raw.githubusercontent.com/yunyu-ya/music-site/音樂/《深井》.mp3">
       <h2>《深井》</h2>
       <button class="play-btn" aria-label="播放 《深井》">▶️ Play</button>
       <p>融入日系風味的旋律，帶有濃厚的情感。</p>
     </section>
 
-    <section class="track" data-audio="《聽不見你了》-男女合唱.mp3">
+    <section class="track" data-audio="https://raw.githubusercontent.com/yunyu-ya/music-site/音樂/《雲下的聲音》.mp3">
+      <h2>《雲下的聲音》</h2>
+      <button class="play-btn" aria-label="播放 《雲下的聲音》">▶️ Play</button>
+      <p>我還能聽見妳嗎??。</p>
+    </section>
+    
+    <section class="track" data-audio="https://raw.githubusercontent.com/yunyu-ya/music-site/音樂/《三樓到六樓的距離》.mp3">
+      <h2>《三樓到六樓的距離》</h2>
+      <button class="play-btn" aria-label="播放 《三樓到六樓的距離》">▶️ Play</button>
+      <p>關於我與樓上的故事。</p>
+    </section>
+    
+    <section class="track" data-audio="https://raw.githubusercontent.com/yunyu-ya/music-site/音樂/《聽不見你了》-男女合唱.mp3">
       <h2>《聽不見你了》-男女合唱</h2>
       <button class="play-btn" aria-label="播放 《聽不見你了》-男女合唱">▶️ Play</button>
-      <p>一首感性的作品，男女深情對唱。</p>
+      <p>一首感性的男女深情對唱。</p>
     </section>
 
-    <section class="track" data-audio="《最後一頁》.mp3">
+    <section class="track" data-audio="https://raw.githubusercontent.com/yunyu-ya/music-site/音樂/《最後一頁》.mp3">
       <h2>《最後一頁》</h2>
       <button class="play-btn" aria-label="播放 《最後一頁》">▶️ Play</button>
       <p>帶有故事感的旋律，帶你翻開最後一頁。</p>
     </section>
 
-    <section class="track" data-audio="《當你不記得我》 .mp3">
+    <section class="track" data-audio="https://raw.githubusercontent.com/yunyu-ya/music-site/音樂/《當你不記得我》 .mp3">
       <h2>《當你不記得我》</h2>
       <button class="play-btn" aria-label="播放 《當你不記得我》">▶️ Play</button>
       <p>感傷的抒情曲，觸動心弦。</p>
     </section>
+  </div>
 
-    <div class="controls">
-      <button id="prev-btn">⏮</button>
-      <button id="main-play-btn">▶️</button>
-      <button id="next-btn">⏭</button>
-    </div>
+  <div class="controls">
+    <button id="prev-btn">⏪</button>
+    <button id="main-play-btn" class="paused">▶️</button>
+    <button id="next-btn">⏩</button>
+    <span class="time-display" id="current-time">0:00</span>
+    <input type="range" id="progress-bar" min="0" max="100" value="0" />
+    <span class="time-display" id="duration">0:00</span>
+  </div>
 
-    <div id="progress-container">
-      <span id="current-time">0:00</span>
-      <input type="range" id="progress" value="0" min="0" max="100">
-      <span id="duration">0:00</span>
-    </div>
+  <input type="range" id="volume-bar" min="0" max="100" value="100" style="width: 100%; margin-top: 0.5rem;" />
 
-    <div id="volume-container">
-      音量：<input type="range" id="volume" min="0" max="1" step="0.01" value="1">
-    </div>
-  </main>
-
-  <audio id="audio-player"></audio>
+  <audio id="audio-player" preload="auto"></audio>
 
   <script>
     const audioPlayer = document.getElementById('audio-player');
     const playButtons = document.querySelectorAll('.play-btn');
-    let currentPlayingBtn = null;
+    const mainPlayBtn = document.getElementById('main-play-btn');
+    const progressBar = document.getElementById('progress-bar');
+    const volumeBar = document.getElementById('volume-bar');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const currentTimeEl = document.getElementById('current-time');
+    const durationEl = document.getElementById('duration');
 
-    const getFileName = url => decodeURIComponent(url.substring(url.lastIndexOf('/') + 1));
+    let currentTrackIndex = -1;
+    let tracks = [];
 
-    playButtons.forEach(btn => {
+    playButtons.forEach((btn, index) => {
+      const trackSection = btn.closest('.track');
+      tracks.push({
+        audio: trackSection.getAttribute('data-audio'),
+        title: trackSection.querySelector('h2').textContent
+      });
+
       btn.addEventListener('click', () => {
-        const track = btn.closest('.track');
-        const audioSrc = track.getAttribute('data-audio');
-        const currentSrc = getFileName(audioPlayer.src);
-
-        if (audioPlayer.src && currentSrc === audioSrc && !audioPlayer.paused) {
-          audioPlayer.pause();
-          updateButton(btn, false);
-          currentPlayingBtn = null;
-          return;
+        if(currentTrackIndex === index){
+          if(audioPlayer.paused){
+            audioPlayer.play();
+            updatePlayBtn(btn, true);
+            mainPlayBtn.textContent = '⏸';
+            mainPlayBtn.classList.add('playing');
+            mainPlayBtn.classList.remove('paused');
+          } else {
+            audioPlayer.pause();
+            updatePlayBtn(btn, false);
+            mainPlayBtn.textContent = '▶️';
+            mainPlayBtn.classList.remove('playing');
+            mainPlayBtn.classList.add('paused');
+          }
+        } else {
+          loadTrack(index);
+          playTrack();
         }
-
-        audioPlayer.src = audioSrc;
-        audioPlayer.play().catch(() => {
-          alert('無法載入音樂檔案！');
-          updateButton(btn, false);
-        });
-
-        if (currentPlayingBtn && currentPlayingBtn !== btn) {
-          updateButton(currentPlayingBtn, false);
-        }
-
-        updateButton(btn, true);
-        currentPlayingBtn = btn;
       });
     });
 
-    audioPlayer.addEventListener('ended', () => {
-      if (currentPlayingBtn) {
-        updateButton(currentPlayingBtn, false);
-        currentPlayingBtn = null;
+    function loadTrack(index){
+      currentTrackIndex = index;
+      audioPlayer.src = tracks[index].audio;
+      updateAllPlayButtons();
+      mainPlayBtn.textContent = '⏸';
+      mainPlayBtn.classList.add('playing');
+      mainPlayBtn.classList.remove('paused');
+    }
+
+    function playTrack(){
+      audioPlayer.play().catch(() => {
+        alert('無法播放音樂檔案');
+      });
+      updateAllPlayButtons(true);
+      mainPlayBtn.textContent = '⏸';
+      mainPlayBtn.classList.add('playing');
+      mainPlayBtn.classList.remove('paused');
+    }
+
+    function pauseTrack(){
+      audioPlayer.pause();
+      updateAllPlayButtons(false);
+      mainPlayBtn.textContent = '▶️';
+      mainPlayBtn.classList.remove('playing');
+      mainPlayBtn.classList.add('paused');
+    }
+
+    mainPlayBtn.addEventListener('click', () => {
+      if(currentTrackIndex === -1 && tracks.length > 0){
+        loadTrack(0);
+        playTrack();
+      } else if(audioPlayer.paused){
+        playTrack();
+      } else {
+        pauseTrack();
       }
     });
 
-    function updateButton(button, isPlaying) {
-      button.textContent = isPlaying ? '⏸ Pause' : '▶️ Play';
-      button.classList.toggle('playing', isPlaying);
-    }
+    prevBtn.addEventListener('click', () => {
+      if(tracks.length === 0) return;
+      currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+      loadTrack(currentTrackIndex);
+      playTrack();
+    });
 
-    // 進度條與音量控制
-    const progress = document.getElementById('progress');
-    const currentTimeEl = document.getElementById('current-time');
-    const durationEl = document.getElementById('duration');
-    const volume = document.getElementById('volume');
+    nextBtn.addEventListener('click', () => {
+      if(tracks.length === 0) return;
+      currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+      loadTrack(currentTrackIndex);
+      playTrack();
+    });
+
+    audioPlayer.addEventListener('ended', () => {
+      nextBtn.click();
+    });
 
     audioPlayer.addEventListener('timeupdate', () => {
-      if (audioPlayer.duration) {
-        progress.value = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+      if(audioPlayer.duration){
+        let progressPercent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+        progressBar.value = progressPercent;
         currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
         durationEl.textContent = formatTime(audioPlayer.duration);
       }
     });
 
-    progress.addEventListener('input', () => {
-      audioPlayer.currentTime = (progress.value / 100) * audioPlayer.duration;
+    progressBar.addEventListener('input', () => {
+      if(audioPlayer.duration){
+        let seekTime = (progressBar.value / 100) * audioPlayer.duration;
+        audioPlayer.currentTime = seekTime;
+      }
     });
 
-    volume.addEventListener('input', () => {
-      audioPlayer.volume = volume.value;
+    volumeBar.addEventListener('input', () => {
+      audioPlayer.volume = volumeBar.value / 100;
     });
 
-    function formatTime(seconds) {
-      const minutes = Math.floor(seconds / 60);
+    function updatePlayBtn(button, isPlaying){
+      if(isPlaying){
+        button.textContent = '⏸ Pause';
+        button.classList.add('playing');
+      } else {
+        button.textContent = '▶️ Play';
+        button.classList.remove('playing');
+      }
+    }
+
+    function updateAllPlayButtons(isPlaying){
+      playButtons.forEach((btn, idx) => {
+        updatePlayBtn(btn, idx === currentTrackIndex && isPlaying);
+      });
+    }
+
+    function formatTime(seconds){
+      const mins = Math.floor(seconds / 60);
       const secs = Math.floor(seconds % 60);
-      return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+      return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
   </script>
 </body>
 </html>
-
-
