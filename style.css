@@ -1,38 +1,34 @@
-/* 移除 Google Fonts @import */
+/* 深色背景＋櫻花粉日系風 */
 
-/* 系統安全字體替代 */
 body {
   margin: 0;
-  background: #121212;
-  color: #eee;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background: linear-gradient(135deg, #1b1b2f, #16213e);
+  color: #f3a683;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-* {
-  box-sizing: border-box;
-}
-
 header {
   padding: 2rem;
   text-align: center;
-  background: #1e1e1e;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+  background: #0f3460;
+  box-shadow: 0 0 10px #f3a683cc;
 }
 
 h1 {
   margin: 0;
   font-weight: 700;
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   color: #f3a683;
+  text-shadow: 0 0 6px #f3a683cc;
 }
 
 .subtitle {
-  margin: 0.5rem 0 0;
-  color: #bbb;
+  margin-top: 0.5rem;
+  color: #d6a77a;
+  font-style: italic;
 }
 
 main {
@@ -43,54 +39,58 @@ main {
 }
 
 .track {
-  background: #222;
-  border-radius: 8px;
-  padding: 1.5rem;
+  background: #16213e;
+  border-radius: 12px;
+  padding: 1.8rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 0 8px #f3a683aa;
-  transition: background 0.3s;
+  box-shadow: 0 0 12px #f3a683aa;
+  transition: background 0.3s ease;
 }
 
 .track:hover {
-  background: #2f2f2f;
+  background: #1b1b2f;
 }
 
 .track h2 {
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.6rem;
   color: #f3a683;
+  font-weight: 600;
+  text-shadow: 0 0 3px #f3a683cc;
 }
 
 .track p {
   margin: 0.5rem 0 1rem;
-  font-size: 0.9rem;
-  color: #ccc;
+  font-size: 1rem;
+  color: #f0c1a1cc;
+  line-height: 1.4;
 }
 
 .play-btn {
   background: #f3a683;
   border: none;
-  padding: 0.5rem 1.2rem;
-  font-size: 1rem;
-  border-radius: 25px;
-  color: #121212;
+  padding: 0.6rem 1.4rem;
+  font-size: 1.1rem;
+  border-radius: 30px;
+  color: #1b1b2f;
   cursor: pointer;
   transition: background 0.3s, transform 0.2s;
-  outline: none;
   user-select: none;
+  box-shadow: 0 0 8px #f3a683aa;
 }
 
 .play-btn:hover {
   background: #f7b68c;
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
 .play-btn:focus {
-  box-shadow: 0 0 0 3px #f3a683cc;
+  outline: none;
+  box-shadow: 0 0 12px 3px #f3a683dd;
 }
 
 .play-btn.playing {
   background: #a36c4e;
   color: #fff;
-  transform: scale(1.1);
-  box-shadow: 0 0 8px #a36c4ecc;
+  transform: scale(1.15);
+  box-shadow: 0 0 14px #a36c4ecc;
 }
