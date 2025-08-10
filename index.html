@@ -27,8 +27,17 @@
       border-radius: 8px;
     }
     header h1 {
-      color: #eee;
+      color: #d1b3ff; /* 淡紫色帶光暈 */
+      text-shadow: 0 0 8px rgba(209, 179, 255, 0.8);
       margin: 0;
+    }
+    #now-playing {
+      margin-top: 0.5rem;
+      font-weight: 600;
+      color: #ccc;
+      text-align: center;
+      font-size: 1rem;
+      font-style: italic;
     }
     .track {
       background: rgba(34, 34, 34, 0.7);
@@ -51,8 +60,7 @@
     }
 
     button.play-btn,
-    #main-play-btn,
-    #loop-mode-btn {
+    #main-play-btn {
       font-family: 'Noto Sans JP', Arial, sans-serif;
       color: #fff;
       background: #6a4fbf;
@@ -65,27 +73,39 @@
       font-weight: 600;
       font-size: 1rem;
       transition: background-position 3s ease infinite;
+      box-shadow: 0 0 10px #6a4fbf99;
     }
     button.play-btn.playing,
     #main-play-btn.playing {
       background: linear-gradient(270deg, #6a4fbf, #7e66d1, #5a3db3, #6a4fbf);
       background-size: 800% 800%;
       animation: gradientAnimation 8s ease infinite;
+      box-shadow: 0 0 18px #7e66d1cc;
     }
     #main-play-btn.paused {
-      background: #6a4fbf;
       animation: none;
     }
 
-    /* Loop mode button 不用漸變，hover有輕微變色 */
-    #loop-mode-btn {
-      min-width: 100px;
-      font-size: 0.9rem;
+    /* 三個播放模式按鈕 */
+    .controls .mode-btn {
+      font-family: 'Noto Sans JP', Arial, sans-serif;
+      color: #fff;
       background: #593f99;
-      transition: background-color 0.3s ease;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 25px;
+      cursor: pointer;
+      user-select: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 0 8px #593f9950;
+      transition: background-position 3s ease infinite;
     }
-    #loop-mode-btn:hover {
-      background: #7e66d1;
+    .controls .mode-btn.active {
+      background: linear-gradient(270deg, #6a4fbf, #7e66d1, #5a3db3, #6a4fbf);
+      background-size: 800% 800%;
+      animation: gradientAnimation 8s ease infinite;
+      box-shadow: 0 0 15px #7e66d1cc;
     }
 
     @keyframes gradientAnimation {
@@ -116,6 +136,7 @@
 <body>
   <header>
     <h1>當天空突然下起雨 妳是否會記得我還在等妳</h1>
+    <div id="now-playing" aria-live="polite">尚未播放任何歌曲</div>
   </header>
 
   <div id="tracks-container">
@@ -160,7 +181,11 @@
     <button id="prev-btn">⏪</button>
     <button id="main-play-btn" class="paused">▶️</button>
     <button id="next-btn">⏩</button>
-    <button id="loop-mode-btn" title="切換播放模式">循環全部</button>
+
+    <button id="loop-all-btn" class="mode-btn active" title="循環全部">循環全部</button>
+    <button id="loop-one-btn" class="mode-btn" title="單曲循環">單曲循環</button>
+    <button id="shuffle-btn" class="mode-btn" title="隨機播放">隨機播放</button>
+
     <span class="time-display" id="current-time">0:00</span>
     <input type="range" id="progress-bar" min="0" max="100" value="0" />
     <span class="time-display" id="duration">0:00</span>
@@ -178,17 +203,23 @@
     const volumeBar = document.getElementById('volume-bar');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
-    const loopModeBtn = document.getElementById('loop-mode-btn');
+
+    // 播放模式按鈕
+    const loopAllBtn = document.getElementById('loop-all-btn');
+    const loopOneBtn = document.getElementById('loop-one-btn');
+    const shuffleBtn = document.getElementById('shuffle-btn');
+
     const currentTimeEl = document.getElementById('current-time');
     const durationEl = document.getElementById('duration');
+    const nowPlayingEl = document.getElementById('now-playing');
 
     let currentTrackIndex = -1;
     let tracks = [];
 
-    // 播放模式：0=循環全部, 1=單曲循環, 2=隨機播放
+    // 0=循環全部, 1=單曲循環, 2=隨機播放
     let playMode = 0;
-    const playModeNames = ["循環全部", "單曲循環", "隨機播放"];
 
+    // 初始化播放清單
     playButtons.forEach((btn, index) => {
       const trackSection = btn.closest('.track');
       tracks.push({
@@ -218,6 +249,14 @@
       });
     });
 
+    function updateNowPlaying(){
+      if(currentTrackIndex === -1){
+        nowPlayingEl.textContent = '尚未播放任何歌曲';
+      } else {
+        nowPlayingEl.textContent = `正在播放：${tracks[currentTrackIndex].title}`;
+      }
+    }
+
     function loadTrack(index){
       currentTrackIndex = index;
       audioPlayer.src = tracks[index].audio;
@@ -225,6 +264,7 @@
       mainPlayBtn.textContent = '⏸';
       mainPlayBtn.classList.add('playing');
       mainPlayBtn.classList.remove('paused');
+      updateNowPlaying();
     }
 
     function playTrack(){
@@ -235,6 +275,7 @@
       mainPlayBtn.textContent = '⏸';
       mainPlayBtn.classList.add('playing');
       mainPlayBtn.classList.remove('paused');
+      updateNowPlaying();
     }
 
     function pauseTrack(){
@@ -270,13 +311,19 @@
       playTrack();
     });
 
-    // 切換播放模式
-    loopModeBtn.addEventListener('click', () => {
-      playMode = (playMode + 1) % 3;
-      loopModeBtn.textContent = playModeNames[playMode];
-    });
+    // 播放模式按鈕互動
+    function setPlayMode(mode){
+      playMode = mode;
+      [loopAllBtn, loopOneBtn, shuffleBtn].forEach(btn => btn.classList.remove('active'));
+      if(mode === 0) loopAllBtn.classList.add('active');
+      else if(mode === 1) loopOneBtn.classList.add('active');
+      else if(mode === 2) shuffleBtn.classList.add('active');
+    }
 
-    // 根據播放模式決定下一首或重播
+    loopAllBtn.addEventListener('click', () => setPlayMode(0));
+    loopOneBtn.addEventListener('click', () => setPlayMode(1));
+    shuffleBtn.addEventListener('click', () => setPlayMode(2));
+
     audioPlayer.addEventListener('ended', () => {
       if(tracks.length === 0) return;
 
@@ -336,7 +383,9 @@
       const secs = Math.floor(seconds % 60);
       return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
+
+    // 預設初始播放模式
+    setPlayMode(0);
   </script>
 </body>
 </html>
-
