@@ -32,8 +32,9 @@
       font-size: 1rem;
       font-style: italic;
     }
-   #now-playing-floating {
-  position: absolute; /* 改成絕對定位 */
+ #now-playing-floating {
+  position: sticky;
+  top: 10px;        /* 距離視窗頂部10px */
   left: 50%;
   transform: translateX(-50%);
   background: rgba(106, 79, 191, 0.9);
@@ -47,6 +48,14 @@
   transition: opacity 0.5s ease;
   pointer-events: none;
   z-index: 9999;
+}
+
+/* 顯示時 */
+#now-playing-floating.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 }
 
     }
