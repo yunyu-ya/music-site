@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>天空突然下起雨</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>當天空突然下起雨 妳是否會記得我還在等妳</h1>
+    <div id="now-playing" aria-live="polite">尚未播放任何歌曲</div>
+  </header>
+
+  <div id="tracks-container">
+    <!-- 歌曲清單會由 tracks.html 載入 -->
+  </div>
+
+  <div class="controls">
+    <button id="prev-btn" title="上一首">⏪</button>
+    <button id="main-play-btn" class="paused" title="播放/暫停">▶️</button>
+    <button id="next-btn" title="下一首">⏩</button>
+
+    <button id="loop-all-btn" class="mode-btn active" title="循環全部">循環全部</button>
+    <button id="loop-one-btn" class="mode-btn" title="單曲循環">單曲循環</button>
+    <button id="shuffle-btn" class="mode-btn" title="隨機播放">隨機播放</button>
+
+    <span class="time-display" id="current-time">0:00</span>
+    <input type="range" id="progress-bar" min="0" max="100" value="0" aria-label="播放進度" />
+    <span class="time-display" id="duration">0:00</span>
+  </div>
+
+  <input type="range" id="volume-bar" min="0" max="100" value="100" style="width: 100%; margin-top: 0.5rem;" aria-label="音量控制" />
+
+  <div id="now-playing-floating" aria-live="polite" role="region">尚未播放任何歌曲</div>
+
+  <audio id="audio-player" preload="auto"></audio>
+
+  <script>
+    // 載入歌曲清單
+    fetch('tracks.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('tracks-container').innerHTML = html;
+        // 歌曲載入完成後再載入播放器功能
+        const script = document.createElement('script');
+        script.src = 'script.js';
+        document.body.appendChild(script);
+      });
+  </script>
+</body>
+</html>
