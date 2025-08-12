@@ -245,8 +245,25 @@ const audioPlayer = document.getElementById('audio-player');
         nextBtn.click();
       } else if(e.code === 'ArrowLeft'){
         prevBtn.click();
-      }
+    }    
     });
+
+// 讓懸浮視窗跟隨捲動位置
+function updateFloatingPosition() {
+  const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  const windowHeight = window.innerHeight;
+  const floatingHeight = nowPlayingFloatingEl.offsetHeight;
+  // 固定在可視區底部 20px
+  nowPlayingFloatingEl.style.top = `${scrollTop + windowHeight - floatingHeight - 20}px`;
+}
+
+// 監聽捲動與視窗大小變化
+window.addEventListener('scroll', updateFloatingPosition);
+window.addEventListener('resize', updateFloatingPosition);
+
+// 初始化位置
+updateFloatingPosition();
+
 
     // 初始化
     setPlayMode(0);
