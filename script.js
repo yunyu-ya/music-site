@@ -428,20 +428,31 @@ window.addEventListener('load', () => {
     });
 
 // 讓懸浮視窗跟隨捲動位置
+const nowPlayingFloatingEl = document.getElementById('now-playing-floating');
+
 function updateFloatingPosition() {
   const scrollTop = window.scrollY || document.documentElement.scrollTop;
   const windowHeight = window.innerHeight;
   const floatingHeight = nowPlayingFloatingEl.offsetHeight;
-  // 固定在可視區底部 20px
-  nowPlayingFloatingEl.style.top = `${scrollTop + windowHeight - floatingHeight - 20}px`;
+  const pageHeight = document.documentElement.scrollHeight;
+
+  // 預設位置：視窗底部往上20px
+  let topPos = scrollTop + windowHeight - floatingHeight - 20;
+
+  // 限制最大top不超過頁面底部（頁面高度 - 懸浮元素高度 - 20px）
+  const maxTop = pageHeight - floatingHeight - 20;
+  if (topPos > maxTop) topPos = maxTop;
+
+  nowPlayingFloatingEl.style.top = `${topPos}px`;
 }
 
-// 監聽捲動與視窗大小變化
+// 監聽捲動與視窗大小事件
 window.addEventListener('scroll', updateFloatingPosition);
 window.addEventListener('resize', updateFloatingPosition);
 
 // 初始化位置
 updateFloatingPosition();
+
 
 
     // 初始化
