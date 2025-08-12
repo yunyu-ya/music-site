@@ -38,7 +38,7 @@ header h1 {
 
 /* 懸浮視窗 */
 #now-playing-floating {
-  position: absolute; /* 由 JS 控制 top */
+  position: absolute;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(106, 79, 191, 0.9);
@@ -52,6 +52,11 @@ header h1 {
   transition: opacity 0.5s ease;
   pointer-events: none;
   z-index: 9999;
+}
+
+#now-playing-floating.visible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 #now-playing-floating.visible {
