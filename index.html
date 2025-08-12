@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>天空突然下起雨</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
@@ -13,7 +13,7 @@
   </header>
 
   <div id="tracks-container">
-    <!-- 歌曲清單會由 tracks.html 載入 -->
+    <!-- 歌曲清單會從 tracks.html 動態載入 -->
   </div>
 
   <div class="controls">
@@ -42,11 +42,12 @@
       .then(res => res.text())
       .then(html => {
         document.getElementById('tracks-container').innerHTML = html;
-        // 歌曲載入完成後再載入播放器功能
+        // 載入script.js功能
         const script = document.createElement('script');
         script.src = 'script.js';
         document.body.appendChild(script);
-      });
+      })
+      .catch(e => console.error('載入歌曲清單錯誤:', e));
   </script>
 </body>
 </html>
