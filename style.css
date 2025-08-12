@@ -32,22 +32,23 @@
       font-size: 1rem;
       font-style: italic;
     }
-    #now-playing-floating {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(106, 79, 191, 0.9);
-      color: #fff;
-      padding: 0.6rem 1.2rem;
-      border-radius: 25px;
-      box-shadow: 0 0 12px #6a4fbfcc;
-      font-weight: 600;
-      font-size: 1rem;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-      pointer-events: none;
-      z-index: 9999;
+   #now-playing-floating {
+  position: absolute; /* 改成絕對定位 */
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(106, 79, 191, 0.9);
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 25px;
+  box-shadow: 0 0 12px #6a4fbfcc;
+  font-weight: 600;
+  font-size: 1rem;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 9999;
+}
+
     }
     #now-playing-floating.visible {
       opacity: 1;
