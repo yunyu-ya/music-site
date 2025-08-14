@@ -13,17 +13,7 @@
   </header>
 
   <div id="tracks-container">
-    <!-- 歌曲清單 -->
-    <div class="track" data-audio="音樂/track1.mp3">
-      <h2>Track 1 <span class="collapse-icon">▼</span></h2>
-      <p>第一首歌描述文字</p>
-      <button class="play-btn">▶️ Play</button>
-    </div>
-    <div class="track" data-audio="音樂/track2.mp3">
-      <h2>Track 2 <span class="collapse-icon">▼</span></h2>
-      <p>第二首歌描述文字</p>
-      <button class="play-btn">▶️ Play</button>
-    </div>
+    <!-- 歌曲清單會由 tracks.html 載入 -->
   </div>
 
   <div class="controls">
@@ -40,14 +30,23 @@
     <span class="time-display" id="duration">0:00</span>
   </div>
 
-  <input type="range" id="volume-bar" min="0" max="100" value="100" aria-label="音量控制" />
-
-  <canvas id="visualizer"></canvas>
+  <input type="range" id="volume-bar" min="0" max="100" value="100" style="width: 100%; margin-top: 0.5rem;" aria-label="音量控制" />
 
   <div id="now-playing-floating" aria-live="polite" role="region">尚未播放任何歌曲</div>
 
   <audio id="audio-player" preload="auto"></audio>
 
-  <script src="script.js"></script>
+  <script>
+    // 載入歌曲清單
+    fetch('tracks.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('tracks-container').innerHTML = html;
+        // 歌曲載入完成後再載入播放器功能
+        const script = document.createElement('script');
+        script.src = 'script.js';
+        document.body.appendChild(script);
+      });
+  </script>
 </body>
 </html>
