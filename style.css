@@ -2,7 +2,7 @@
 
 body {
   font-family: 'Noto Sans JP', Arial, sans-serif;
-  background: url("https://raw.githubusercontent.com/yunyu-ya/music-site/音樂/pexels-alex-andrews-271121-816608.jpg") no-repeat center center fixed;
+  background: url("音樂背景.jpg") no-repeat center center fixed;
   background-size: cover;
   color: #eee;
   margin: 0;
@@ -27,8 +27,6 @@ header h1 { color:#d1b3ff; text-shadow:0 0 8px rgba(209,179,255,0.8); margin:0; 
 .track { background: rgba(34,34,34,0.7); border-radius:8px; padding:1rem; margin-bottom:1rem; }
 .track.collapsed > p { display:none; }
 .track h2 { margin:0 0 0.5rem 0; cursor:pointer; user-select:none; color:#d1b3ff; text-shadow:0 0 6px rgba(209,179,255,0.7); display:flex; justify-content:space-between; align-items:center; }
-.collapse-icon { font-size:0.8rem; margin-left:0.5rem; transition: transform 0.3s; }
-.track.collapsed .collapse-icon { transform: rotate(-90deg); }
 
 .controls { display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem; background: rgba(0,0,0,0.5); padding:0.5rem; border-radius:8px; flex-wrap:wrap; }
 
@@ -51,32 +49,8 @@ input[type=range]::-moz-range-thumb:hover {background:#7e66d1; box-shadow:0 0 12
 
 .time-display { width:80px; text-align:center; font-size:0.9rem; user-select:none; color:#ddd; min-width:50px; }
 
-#visualizer { width:100%; height:100px; background:rgba(0,0,0,0.3); border-radius:8px; box-shadow:0 0 15px #6a4fbf66 inset; margin-top:1rem; display:block;}
-  font-size: 0.8rem;
-  user-select: none;
-  margin-left: 0.5rem;
-  transition: transform 0.3s ease;
-}
-
-.track.collapsed .collapse-icon {
-  transform: rotate(-90deg);
-}
-
-.controls {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-  background: rgba(0,0,0,0.5);
-  padding: 0.5rem;
-  border-radius: 8px;
-  flex-wrap: wrap;
-}
-
-button.play-btn,
-#main-play-btn {
-  font-family: 'Noto Sans JP', Arial, sans-serif;
-  color: #fff;
+/* 聲波 visualizer */
+#visualizer { width:100%; height:120px; background: rgba(0,0,0,0.2); border-radius:8px; box-shadow:0 0 15px #6a4fbf66 inset; margin-top:1rem; }
   background: #6a4fbf;
   border: none;
   padding: 0.5rem 1rem;
