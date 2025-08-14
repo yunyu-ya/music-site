@@ -30,12 +30,14 @@
     <span class="time-display" id="duration">0:00</span>
   </div>
 
-<input type="range" id="volume-bar" min="0" max="100" value="100" style="width: 100%; margin-top: 0.5rem;" aria-label="音量控制" />
+  <!-- 音量控制 -->
+  <input type="range" id="volume-bar" min="0" max="100" value="100" style="width: 100%; margin-top: 0.5rem;" aria-label="音量控制" />
 
-<canvas id="visualizer" width="600" height="100" style="width:100%; display:block; margin-top:1rem;"></canvas>
+  <!-- 聲波可視化 -->
+  <canvas id="visualizer" width="600" height="100" style="width:100%; display:block; margin-top:1rem;"></canvas>
 
-<div id="now-playing-floating" aria-live="polite" role="region">尚未播放任何歌曲</div>
-
+  <!-- 浮動播放顯示 -->
+  <div id="now-playing-floating" aria-live="polite" role="region">尚未播放任何歌曲</div>
 
   <audio id="audio-player" preload="auto"></audio>
 
