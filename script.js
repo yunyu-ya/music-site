@@ -1,5 +1,5 @@
 const audioPlayer = document.getElementById('audio-player');
-const playButtons = document.querySelectorAll('.play-btn');
+const playButtons = [];
 const mainPlayBtn = document.getElementById('main-play-btn');
 const progressBar = document.getElementById('progress-bar');
 const volumeBar = document.getElementById('volume-bar');
@@ -15,12 +15,12 @@ const nowPlayingFloatingEl = document.getElementById('now-playing-floating');
 const canvas = document.getElementById('visualizer');
 const ctx = canvas.getContext('2d');
 
-let tracks = Array.from(document.querySelectorAll('.track'));
-let currentIndex = 0;
-let playMode = 'all'; // all, one, shuffle
-let audioContext, analyser, source, bufferLength, dataArray;
+let tracks = [];
+let currentTrackIndex = -1;
+let playMode = 0;
 
-// 初始化 visualizer
+let audioContext, analyser, source, dataArray, bufferLength;
+
 function initVisualizer(){
   canvas.width = canvas.clientWidth;
   canvas.height = canvas.clientHeight;
@@ -39,43 +39,175 @@ function drawVisualizer(){
   requestAnimationFrame(drawVisualizer);
   analyser.getByteFrequencyData(dataArray);
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  const barWidth = (canvas.width / bufferLength) * 2.5;
-  let x = 0;
+  const barWidth = (canvas.width/bufferLength)*1.5;
+  let x=0;
   for(let i=0;i<bufferLength;i++){
-    const barHeight = dataArray[i];
-    const r = barHeight + 50;
-    const g = 100;
-    const b = 200;
-    ctx.fillStyle = `rgb(${r},${g},${b})`;
-    ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-    x += barWidth + 1;
+    const barHeight = dataArray[i]/1.5;
+    ctx.fillStyle = `rgb(${barHeight+100},100,200)`;
+    ctx.fillRect(x, canvas.height-barHeight, barWidth, barHeight);
+    x+=barWidth+1;
   }
 }
 
-// 播放指定歌曲
-function playTrack(index){
-  const track = tracks[index];
-  const audioSrc = track.dataset.audio;
-  audioPlayer.src = audioSrc;
-  audioPlayer.play();
-  updateNowPlaying(track.querySelector('h2').textContent);
-  mainPlayBtn.classList.add('playing'); mainPlayBtn.classList.remove('paused');
-  playButtons.forEach(btn=>btn.classList.remove('playing'));
-  track.querySelector('.play-btn').classList.add('playing');
+function saveState(){
+  if(currentTrackIndex!==-1)
+    localStorage.setItem('musicPlayerState', JSON.stringify({trackIndex:currentTrackIndex,currentTime:audioPlayer.currentTime}));
 }
 
-// 更新現在播放
-function updateNowPlaying(title){
-  nowPlayingEl.textContent = title;
-  nowPlayingFloatingEl.textContent = title;
-  nowPlayingFloatingEl.classList.add('visible');
-  setTimeout(()=>{nowPlayingFloatingEl.classList.remove('visible');},2000);
+function loadState(){
+  const state = localStorage.getItem('musicPlayerState');
+  if(state){
+    try{
+      const obj = JSON.parse(state);
+      if(obj.trackIndex>=0 && obj.trackIndex<tracks.length){
+        currentTrackIndex=obj.trackIndex;
+        audioPlayer.src=tracks[currentTrackIndex].audio;
+        updateAllPlayButtons();
+        updateNowPlaying();
+        audioPlayer.currentTime=obj.currentTime||0;
+      }
+    }catch(e){}
+  }
 }
 
-// 按鈕事件
-mainPlayBtn.addEventListener('click',()=>{
-  if(audioPlayer.paused) audioPlayer.play();
-  else audioPlayer.pause();
+// 初始化播放清單
+function initTracks(){
+  const trackSections = document.querySelectorAll('.track');
+  trackSections.forEach((section, index)=>{
+    const btn = section.querySelector('.play-btn');
+    playButtons.push(btn);
+    tracks.push({
+      audio: section.dataset.audio.trim(),
+      title: section.querySelector('h2').textContent
+    });
+
+    btn.addEventListener('click', ()=>{
+      if(currentTrackIndex === index){
+        audioPlayer.paused?playTrack():pauseTrack();
+      } else {
+        loadTrack(index);
+        playTrack();
+      }
+    });
+
+    // 折疊文字
+    const h2 = section.querySelector('h2');
+    h2.addEventListener('click', ()=>section.classList.toggle('collapsed'));
+  });
+
+  setPlayMode(0);
+  loadState();
+  initVisualizer();
+}
+
+// 更新 Now Playing
+function updateNowPlaying(){
+  if(currentTrackIndex === -1){
+    nowPlayingEl.textContent='尚未播放任何歌曲';
+    nowPlayingFloatingEl.textContent='尚未播放任何歌曲';
+    nowPlayingFloatingEl.classList.remove('visible');
+  } else {
+    nowPlayingEl.textContent=`正在播放：${tracks[currentTrackIndex].title}`;
+    nowPlayingFloatingEl.textContent=`正在播放：${tracks[currentTrackIndex].title}`;
+    nowPlayingFloatingEl.classList.add('visible');
+  }
+}
+
+function loadTrack(index){
+  currentTrackIndex = index;
+  audioPlayer.src = tracks[index].audio;
+  updateAllPlayButtons();
+  mainPlayBtn.textContent='⏸'; mainPlayBtn.classList.add('playing'); mainPlayBtn.classList.remove('paused');
+  updateNowPlaying();
+  const trackSections = document.querySelectorAll('.track');
+  if(trackSections[index]) trackSections[index].scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function playTrack(){
+  audioContext?.resume();
+  audioPlayer.play().catch(()=>alert('無法播放音樂檔案'));
+  updateAllPlayButtons(true);
+  mainPlayBtn.textContent='⏸'; mainPlayBtn.classList.add('playing'); mainPlayBtn.classList.remove('paused');
+  updateNowPlaying();
+}
+
+function pauseTrack(){
+  audioPlayer.pause();
+  updateAllPlayButtons(false);
+  mainPlayBtn.textContent='▶️'; mainPlayBtn.classList.remove('playing'); mainPlayBtn.classList.add('paused');
+}
+
+// 控制按鈕
+mainPlayBtn.addEventListener('click', ()=>{
+  if(currentTrackIndex===-1 && tracks.length>0){ loadTrack(0); playTrack(); }
+  else audioPlayer.paused?playTrack():pauseTrack();
+});
+prevBtn.addEventListener('click', ()=>{
+  if(tracks.length===0) return;
+  currentTrackIndex=(currentTrackIndex-1+tracks.length)%tracks.length;
+  loadTrack(currentTrackIndex);
+  playTrack();
+});
+nextBtn.addEventListener('click', ()=>{
+  if(tracks.length===0) return;
+  currentTrackIndex=(currentTrackIndex+1)%tracks.length;
+  loadTrack(currentTrackIndex);
+  playTrack();
+});
+
+// 播放模式
+function setPlayMode(mode){
+  playMode=mode;
+  [loopAllBtn,loopOneBtn,shuffleBtn].forEach(btn=>btn.classList.remove('active'));
+  if(mode===0) loopAllBtn.classList.add('active');
+  else if(mode===1) loopOneBtn.classList.add('active');
+  else shuffleBtn.classList.add('active');
+}
+loopAllBtn.addEventListener('click',()=>setPlayMode(0));
+loopOneBtn.addEventListener('click',()=>setPlayMode(1));
+shuffleBtn.addEventListener('click',()=>setPlayMode(2));
+
+audioPlayer.addEventListener('ended',()=>{
+  if(tracks.length===0) return;
+  if(playMode===0) nextBtn.click();
+  else if(playMode===1){ audioPlayer.currentTime=0; audioPlayer.play(); }
+  else {
+    let rand=currentTrackIndex;
+    while(rand===currentTrackIndex && tracks.length>1) rand=Math.floor(Math.random()*tracks.length);
+    loadTrack(rand); playTrack();
+  }
+});
+
+audioPlayer.addEventListener('timeupdate',()=>{
+  if(audioPlayer.duration){
+    let percent=(audioPlayer.currentTime/audioPlayer.duration)*100;
+    progressBar.value=percent;
+    currentTimeEl.textContent=formatTime(audioPlayer.currentTime);
+    durationEl.textContent=formatTime(audioPlayer.duration);
+    saveState();
+  }
+});
+progressBar.addEventListener('input',()=>{ if(audioPlayer.duration) audioPlayer.currentTime=(progressBar.value/100)*audioPlayer.duration; });
+volumeBar.addEventListener('input',()=>{ audioPlayer.volume=volumeBar.value/100; });
+
+// 更新按鈕樣式
+function updatePlayBtn(button,isPlaying){ if(isPlaying){ button.textContent='⏸ Pause'; button.classList.add('playing'); } else{ button.textContent='▶️ Play'; button.classList.remove('playing'); } }
+function updateAllPlayButtons(isPlaying){ playButtons.forEach((btn,idx)=>updatePlayBtn(btn,idx===currentTrackIndex && isPlaying)); }
+
+function formatTime(sec){ const m=Math.floor(sec/60); const s=Math.floor(sec%60); return `${m}:${s<10?'0':''}${s}`; }
+
+// 鍵盤快捷鍵
+window.addEventListener('keydown',(e)=>{
+  if(e.target.tagName==='INPUT') return;
+  if(e.code==='Space'){ e.preventDefault(); audioPlayer.paused?playTrack():pauseTrack(); }
+  else if(e.code==='ArrowRight') nextBtn.click();
+  else if(e.code==='ArrowLeft') prevBtn.click();
+});
+
+// 初始化（必須在 fetch 後呼叫）
+window.addEventListener('load',()=>{
+  // 等 fetch 載入 tracks.html 後，initTracks() 才會呼叫
+  if(document.querySelectorAll('.track').length>0) initTracks();
 });
 audioPlayer.addEventListener('play',()=>{mainPlayBtn.classList.add('playing'); mainPlayBtn.classList.remove('paused');});
 audioPlayer.addEventListener('pause',()=>{mainPlayBtn.classList.remove('playing'); mainPlayBtn.classList.add('paused');});
