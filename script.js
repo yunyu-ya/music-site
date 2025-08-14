@@ -15,12 +15,12 @@ const nowPlayingFloatingEl = document.getElementById('now-playing-floating');
 const canvas = document.getElementById('visualizer');
 const ctx = canvas.getContext('2d');
 
-let currentTrackIndex = -1;
-let tracks = [];
-let playMode = 0;
+let tracks = Array.from(document.querySelectorAll('.track'));
+let currentIndex = 0;
+let playMode = 'all'; // all, one, shuffle
+let audioContext, analyser, source, bufferLength, dataArray;
 
-let audioContext, analyser, source, dataArray, bufferLength;
-
+// 初始化 visualizer
 function initVisualizer(){
   canvas.width = canvas.clientWidth;
   canvas.height = canvas.clientHeight;
@@ -39,44 +39,87 @@ function drawVisualizer(){
   requestAnimationFrame(drawVisualizer);
   analyser.getByteFrequencyData(dataArray);
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  const barWidth = (canvas.width/bufferLength)*1.5;
-  let x=0;
+  const barWidth = (canvas.width / bufferLength) * 2.5;
+  let x = 0;
   for(let i=0;i<bufferLength;i++){
-    const barHeight = dataArray[i]/1.5;
-    ctx.fillStyle = `rgb(${barHeight+100},100,200)`;
-    ctx.fillRect(x, canvas.height-barHeight, barWidth, barHeight);
-    x+=barWidth+1;
+    const barHeight = dataArray[i];
+    const r = barHeight + 50;
+    const g = 100;
+    const b = 200;
+    ctx.fillStyle = `rgb(${r},${g},${b})`;
+    ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+    x += barWidth + 1;
   }
 }
 
-function saveState(){
-  if(currentTrackIndex!==-1)
-    localStorage.setItem('musicPlayerState', JSON.stringify({trackIndex:currentTrackIndex,currentTime:audioPlayer.currentTime}));
+// 播放指定歌曲
+function playTrack(index){
+  const track = tracks[index];
+  const audioSrc = track.dataset.audio;
+  audioPlayer.src = audioSrc;
+  audioPlayer.play();
+  updateNowPlaying(track.querySelector('h2').textContent);
+  mainPlayBtn.classList.add('playing'); mainPlayBtn.classList.remove('paused');
+  playButtons.forEach(btn=>btn.classList.remove('playing'));
+  track.querySelector('.play-btn').classList.add('playing');
 }
 
-function loadState(){
-  const state = localStorage.getItem('musicPlayerState');
-  if(state){
-    try{
-      const obj = JSON.parse(state);
-      if(obj.trackIndex>=0 && obj.trackIndex<tracks.length){
-        currentTrackIndex=obj.trackIndex;
-        audioPlayer.src=tracks[currentTrackIndex].audio;
-        updateAllPlayButtons();
-        updateNowPlaying();
-        audioPlayer.currentTime=obj.currentTime||0;
-      }
-    }catch(e){}
-  }
+// 更新現在播放
+function updateNowPlaying(title){
+  nowPlayingEl.textContent = title;
+  nowPlayingFloatingEl.textContent = title;
+  nowPlayingFloatingEl.classList.add('visible');
+  setTimeout(()=>{nowPlayingFloatingEl.classList.remove('visible');},2000);
 }
 
-// 初始化 tracks
-playButtons.forEach((btn,index)=>{
-  const trackSection=btn.closest('.track');
-  tracks.push({audio:trackSection.dataset.audio,title:trackSection.querySelector('h2').textContent});
-  btn.addEventListener('click',()=>{
-    if(currentTrackIndex===index){ audioPlayer.paused?playTrack():pauseTrack(); }
-    else { loadTrack(index); playTrack(); }
+// 按鈕事件
+mainPlayBtn.addEventListener('click',()=>{
+  if(audioPlayer.paused) audioPlayer.play();
+  else audioPlayer.pause();
+});
+audioPlayer.addEventListener('play',()=>{mainPlayBtn.classList.add('playing'); mainPlayBtn.classList.remove('paused');});
+audioPlayer.addEventListener('pause',()=>{mainPlayBtn.classList.remove('playing'); mainPlayBtn.classList.add('paused');});
+
+playButtons.forEach((btn,i)=>{
+  btn.addEventListener('click',()=>{currentIndex=i; playTrack(currentIndex);});
+});
+
+prevBtn.addEventListener('click',()=>{
+  currentIndex = (currentIndex-1+tracks.length)%tracks.length;
+  playTrack(currentIndex);
+});
+nextBtn.addEventListener('click',()=>{
+  if(playMode==='shuffle') currentIndex=Math.floor(Math.random()*tracks.length);
+  else currentIndex = (currentIndex+1)%tracks.length;
+  playTrack(currentIndex);
+});
+
+// 播放模式
+loopAllBtn.addEventListener('click',()=>{playMode='all'; setActive(loopAllBtn);});
+loopOneBtn.addEventListener('click',()=>{playMode='one'; setActive(loopOneBtn);});
+shuffleBtn.addEventListener('click',()=>{playMode='shuffle'; setActive(shuffleBtn);});
+function setActive(btn){[loopAllBtn,loopOneBtn,shuffleBtn].forEach(b=>b.classList.remove('active')); btn.classList.add('active');}
+
+// 更新進度條
+audioPlayer.addEventListener('timeupdate',()=>{
+  progressBar.value = (audioPlayer.currentTime/audioPlayer.duration)*100 || 0;
+  currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+  durationEl.textContent = formatTime(audioPlayer.duration);
+});
+progressBar.addEventListener('input',()=>{audioPlayer.currentTime = (progressBar.value/100)*audioPlayer.duration;});
+volumeBar.addEventListener('input',()=>{audioPlayer.volume = volumeBar.value/100;});
+
+// 歌曲結束
+audioPlayer.addEventListener('ended',()=>{
+  if(playMode==='one'){playTrack(currentIndex);}
+  else if(playMode==='shuffle'){currentIndex=Math.floor(Math.random()*tracks.length); playTrack(currentIndex);}
+  else{currentIndex=(currentIndex+1)%tracks.length; playTrack(currentIndex);}
+});
+
+// 格式化時間
+function formatTime(sec){if(isNaN(sec)) return '0:00'; const m=Math.floor(sec/60); const s=Math.floor(sec%60); return `${m}:${s<10?'0'+s:s}`;}
+
+window.addEventListener('load',()=>{initVisualizer();});
   });
 });
 
