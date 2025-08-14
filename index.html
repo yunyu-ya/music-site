@@ -36,13 +36,15 @@
 
   <audio id="audio-player" preload="auto"></audio>
 
+  <canvas id="visualizer"></canvas>
+
   <script>
-    // 載入歌曲清單
+    // 先載入歌曲清單
     fetch('tracks.html')
       .then(res => res.text())
       .then(html => {
         document.getElementById('tracks-container').innerHTML = html;
-        // 歌曲載入完成後再載入播放器功能
+        // 歌曲清單載入完成後再載入播放器功能
         const script = document.createElement('script');
         script.src = 'script.js';
         document.body.appendChild(script);
