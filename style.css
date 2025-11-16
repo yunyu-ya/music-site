@@ -22,7 +22,7 @@ header {
 }
 
 header h1 {
-  color: #d1b3ff !important; /* 確保標題顏色生效 */
+  color: #d1b3ff !important;
   text-shadow: 0 0 8px rgba(209, 179, 255, 0.8);
   margin: 0;
 }
@@ -59,28 +59,18 @@ header h1 {
   pointer-events: auto;
 }
 
-/* 正式作品 */
-.track {
+.track, .trash {
   background: rgba(34, 34, 34, 0.7);
   border-radius: 8px;
   padding: 1rem;
   margin-bottom: 1rem;
 }
 
-/* 廢棄作品 */
-.trash {
-  background: rgba(60, 30, 30, 0.6);
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-}
-
-.track.collapsed > p,
-.trash.collapsed > p {
+.track.collapsed > p {
   display: none;
 }
 
-.track h2, .trash h2 {
+.track h2 {
   margin: 0 0 0.5rem 0;
   cursor: pointer;
   user-select: none;
@@ -98,8 +88,7 @@ header h1 {
   transition: transform 0.3s ease;
 }
 
-.track.collapsed .collapse-icon,
-.trash.collapsed .collapse-icon {
+.track.collapsed .collapse-icon {
   transform: rotate(-90deg);
 }
 
@@ -183,6 +172,7 @@ input[type=range] {
 
 input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
+  appearance: none;
   width: 20px;
   height: 20px;
   border-radius: 50%;
@@ -224,4 +214,21 @@ input[type=range]::-moz-range-thumb:hover {
   user-select: none;
   color: #ddd;
   min-width: 50px;
+}
+
+/* 手機優化 */
+@media (max-width: 768px) {
+  button.play-btn.playing,
+  #main-play-btn.playing {
+    animation: none !important;
+    box-shadow: none !important;
+  }
+  #now-playing-floating {
+    position: sticky !important;
+    bottom: 0 !important;
+    transform: none !important;
+  }
+  body {
+    backdrop-filter: none !important;
+  }
 }
