@@ -49,7 +49,7 @@ header h1 {
   font-weight: 600;
   font-size: 1rem;
   opacity: 0;
-  transition: opacity 0.5s ease, transform 0.3s ease;
+  transition: opacity 0.5s ease;
   pointer-events: none;
   z-index: 9999;
 }
@@ -57,58 +57,42 @@ header h1 {
 #now-playing-floating.visible {
   opacity: 1;
   pointer-events: auto;
-  transform: translateX(-50%) translateY(-5px);
 }
 
-/* 正式作品 */
 .track {
   background: rgba(34, 34, 34, 0.7);
   border-radius: 8px;
   padding: 1rem;
   margin-bottom: 1rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.track:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 15px rgba(106,79,191,0.7);
+.trash {
+  background: rgba(50, 0, 0, 0.6);
 }
 
-/* 廢棄作品 */
-.track.trash {
-  background: rgba(50, 20, 20, 0.6);
-  border: 1px solid rgba(200,50,50,0.5);
-}
-
-.track.trash:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 15px rgba(255,80,50,0.7);
-}
-
-.track.collapsed > p {
+.track.collapsed > p,
+.trash.collapsed > p {
   display: none;
 }
 
-.track h2 {
+.track h2,
+.trash h2 {
   margin: 0 0 0.5rem 0;
   cursor: pointer;
   user-select: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
-/* 正式作品標題 */
-.track:not(.trash) h2 {
+.track h2 {
   color: #d1b3ff;
   text-shadow: 0 0 6px rgba(209, 179, 255, 0.7);
 }
 
-/* 廢棄作品標題 */
-.track.trash h2 {
+.trash h2 {
   color: #ff8c80;
-  text-shadow: 0 0 6px rgba(255,140,128,0.7);
+  text-shadow: 0 0 6px rgba(255, 140, 128, 0.7);
 }
 
 .collapse-icon {
@@ -118,7 +102,8 @@ header h1 {
   transition: transform 0.3s ease;
 }
 
-.track.collapsed .collapse-icon {
+.track.collapsed .collapse-icon,
+.trash.collapsed .collapse-icon {
   transform: rotate(-90deg);
 }
 
@@ -146,11 +131,17 @@ button.play-btn,
   min-width: 70px;
   font-weight: 600;
   font-size: 1rem;
-  transition: background-position 3s ease infinite, box-shadow 0.3s ease;
+  transition: background-position 3s ease infinite;
   box-shadow: 0 0 10px #6a4fbf99;
 }
 
-button.play-btn.playing,
+button.play-btn.playing {
+  background: linear-gradient(270deg, #6a4fbf, #7e66d1, #5a3db3, #6a4fbf);
+  background-size: 800% 800%;
+  animation: gradientAnimation 8s ease infinite;
+  box-shadow: 0 0 18px #7e66d1cc;
+}
+
 #main-play-btn.playing {
   background: linear-gradient(270deg, #6a4fbf, #7e66d1, #5a3db3, #6a4fbf);
   background-size: 800% 800%;
@@ -174,11 +165,7 @@ button.play-btn.playing,
   font-weight: 600;
   font-size: 0.9rem;
   box-shadow: 0 0 8px #593f9950;
-  transition: background-position 3s ease infinite, transform 0.2s ease;
-}
-
-.controls .mode-btn:hover {
-  transform: scale(1.05);
+  transition: background-position 3s ease infinite;
 }
 
 .controls .mode-btn.active {
@@ -204,7 +191,27 @@ input[type=range] {
   margin: 0 10px;
 }
 
-input[type=range]::-webkit-slider-thumb,
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #6a4fbf;
+  cursor: pointer;
+  box-shadow: 0 0 8px #6a4fbf;
+  transition: background 0.3s ease;
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+  background: #7e66d1;
+  box-shadow: 0 0 12px #7e66d1;
+}
+
+input[type=range]:focus {
+  outline: none;
+  background: #555;
+}
+
 input[type=range]::-moz-range-thumb {
   width: 20px;
   height: 20px;
@@ -215,7 +222,6 @@ input[type=range]::-moz-range-thumb {
   transition: background 0.3s ease;
 }
 
-input[type=range]::-webkit-slider-thumb:hover,
 input[type=range]::-moz-range-thumb:hover {
   background: #7e66d1;
   box-shadow: 0 0 12px #7e66d1;
